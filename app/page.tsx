@@ -20,6 +20,9 @@ export default function Home() {
         />
         <ol>
           <li>
+            This the page of Group 41
+          </li>
+          <li>
             <code>app/page.tsx</code>{" "}
             is the landing page for your application, currently being displayed.
           </li>
