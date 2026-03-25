@@ -3,15 +3,27 @@ import { ApplicationError } from "@/types/error";
 
 export class ApiService {
   private baseURL: string;
-  private defaultHeaders: HeadersInit;
 
   constructor() {
     this.baseURL = getApiDomain();
-    this.defaultHeaders = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    };
   }
+
+  private getHeaders(includeJsonContentType: boolean = true): HeadersInit {
+    const headers: HeadersInit = {};
+
+    if (includeJsonContentType) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+    }
+    return headers;
+  }
+
 
   /**
    * Helper function to check the response, parse JSON,
@@ -22,37 +34,43 @@ export class ApiService {
    * @returns Parsed JSON data.
    * @throws ApplicationError if res.ok is false.
    */
-  private async processResponse<T>(
-    res: Response,
-    errorMessage: string,
-  ): Promise<T> {
-    if (!res.ok) {
-      let errorDetail = res.statusText;
+
+  private async processResponse<T>(response: Response, errorMessage: string): Promise<T> {
+    if (!response.ok) {
+      let errorDetail = response.statusText;
+
       try {
-        const errorInfo = await res.json();
-        if (errorInfo?.message) {
-          errorDetail = errorInfo.message;
+        const errorData = await response.json();
+        if (errorData?.reason) {
+          errorDetail = errorData.reason;
+        } else if (errorData?.message) {
+          errorDetail = errorData.message;
         } else {
-          errorDetail = JSON.stringify(errorInfo);
+          errorDetail = JSON.stringify(errorData);
         }
-      } catch {
-        // If parsing fails, keep using res.statusText
+      } catch { //this ignordes any json parse errors
       }
-      const detailedMessage = `${errorMessage} (${res.status}: ${errorDetail})`;
-      const error: ApplicationError = new Error(
-        detailedMessage,
+      const error = new Error(
+        `${errorMessage} (${response.status}: ${errorDetail})`
       ) as ApplicationError;
+
+      error.status = response.status;
       error.info = JSON.stringify(
-        { status: res.status, statusText: res.statusText },
+        {
+          status: response.status,
+          statusText: response.statusText,
+        },
         null,
-        2,
+        2
       );
-      error.status = res.status;
+
       throw error;
     }
-    return res.headers.get("Content-Type")?.includes("application/json")
-      ? (res.json() as Promise<T>)
-      : Promise.resolve(res as T);
+    const contentType = response.headers.get("Content-Type");
+    if (contentType && contentType.includes("application/json")) {
+      return response.json() as Promise<T>;
+    }
+    return undefined as T;
   }
 
   /**
