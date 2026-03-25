@@ -79,15 +79,12 @@ export class ApiService {
    * @returns JSON data of type T.
    */
   public async get<T>(endpoint: string): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const res = await fetch(url, {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: "GET",
-      headers: this.defaultHeaders,
+      headers: this.getHeaders(),
     });
-    return this.processResponse<T>(
-      res,
-      "An error occurred while fetching the data.\n",
-    );
+
+    return this.processResponse<T>(response, "Failed to fetch data");
   }
 
   /**
@@ -96,17 +93,14 @@ export class ApiService {
    * @param data - The payload to post.
    * @returns JSON data of type T.
    */
-  public async post<T>(endpoint: string, data: unknown): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const res = await fetch(url, {
+  public async post<T>(endpoint: string, data?: unknown): Promise<T> {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: "POST",
-      headers: this.defaultHeaders,
-      body: JSON.stringify(data),
+      headers: this.getHeaders(),
+      body: data !== undefined ? JSON.stringify(data) : undefined,
     });
-    return this.processResponse<T>(
-      res,
-      "An error occurred while posting the data.\n",
-    );
+
+    return this.processResponse<T>(response, "Failed to post data");
   }
 
   /**
@@ -115,17 +109,14 @@ export class ApiService {
    * @param data - The payload to update.
    * @returns JSON data of type T.
    */
-  public async put<T>(endpoint: string, data: unknown): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const res = await fetch(url, {
+  public async put<T>(endpoint: string, data?: unknown): Promise<T> {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: "PUT",
-      headers: this.defaultHeaders,
-      body: JSON.stringify(data),
+      headers: this.getHeaders(),
+      body: data !== undefined ? JSON.stringify(data) : undefined,
     });
-    return this.processResponse<T>(
-      res,
-      "An error occurred while updating the data.\n",
-    );
+
+    return this.processResponse<T>(response, "Failed to update data");
   }
 
   /**
@@ -133,15 +124,13 @@ export class ApiService {
    * @param endpoint - The API endpoint (e.g. "/users/123").
    * @returns JSON data of type T.
    */
+
   public async delete<T>(endpoint: string): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const res = await fetch(url, {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: "DELETE",
-      headers: this.defaultHeaders,
+      headers: this.getHeaders(),
     });
-    return this.processResponse<T>(
-      res,
-      "An error occurred while deleting the data.\n",
-    );
+    return this.processResponse<T>(response, "Failed to delete data");
   }
 }
+
