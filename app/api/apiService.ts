@@ -3,15 +3,27 @@ import { ApplicationError } from "@/types/error";
 
 export class ApiService {
   private baseURL: string;
-  private defaultHeaders: HeadersInit;
 
   constructor() {
     this.baseURL = getApiDomain();
-    this.defaultHeaders = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    };
   }
+
+  private getHeaders(includeJsonContentType: boolean = true): HeadersInit {
+    const headers: HeadersInit = {};
+
+    if (includeJsonContentType) {
+      headers["Content-Type"] = "application/json";
+    }
+
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+    }
+    return headers;
+  }
+
 
   /**
    * Helper function to check the response, parse JSON,
@@ -22,37 +34,43 @@ export class ApiService {
    * @returns Parsed JSON data.
    * @throws ApplicationError if res.ok is false.
    */
-  private async processResponse<T>(
-    res: Response,
-    errorMessage: string,
-  ): Promise<T> {
-    if (!res.ok) {
-      let errorDetail = res.statusText;
+
+  private async processResponse<T>(response: Response, errorMessage: string): Promise<T> {
+    if (!response.ok) {
+      let errorDetail = response.statusText;
+
       try {
-        const errorInfo = await res.json();
-        if (errorInfo?.message) {
-          errorDetail = errorInfo.message;
+        const errorData = await response.json();
+        if (errorData?.reason) {
+          errorDetail = errorData.reason;
+        } else if (errorData?.message) {
+          errorDetail = errorData.message;
         } else {
-          errorDetail = JSON.stringify(errorInfo);
+          errorDetail = JSON.stringify(errorData);
         }
-      } catch {
-        // If parsing fails, keep using res.statusText
+      } catch { //this ignordes any json parse errors
       }
-      const detailedMessage = `${errorMessage} (${res.status}: ${errorDetail})`;
-      const error: ApplicationError = new Error(
-        detailedMessage,
+      const error = new Error(
+        `${errorMessage} (${response.status}: ${errorDetail})`
       ) as ApplicationError;
+
+      error.status = response.status;
       error.info = JSON.stringify(
-        { status: res.status, statusText: res.statusText },
+        {
+          status: response.status,
+          statusText: response.statusText,
+        },
         null,
-        2,
+        2
       );
-      error.status = res.status;
+
       throw error;
     }
-    return res.headers.get("Content-Type")?.includes("application/json")
-      ? (res.json() as Promise<T>)
-      : Promise.resolve(res as T);
+    const contentType = response.headers.get("Content-Type");
+    if (contentType && contentType.includes("application/json")) {
+      return response.json() as Promise<T>;
+    }
+    return undefined as T;
   }
 
   /**
@@ -61,15 +79,12 @@ export class ApiService {
    * @returns JSON data of type T.
    */
   public async get<T>(endpoint: string): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const res = await fetch(url, {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: "GET",
-      headers: this.defaultHeaders,
+      headers: this.getHeaders(),
     });
-    return this.processResponse<T>(
-      res,
-      "An error occurred while fetching the data.\n",
-    );
+
+    return this.processResponse<T>(response, "Failed to fetch data");
   }
 
   /**
@@ -78,17 +93,14 @@ export class ApiService {
    * @param data - The payload to post.
    * @returns JSON data of type T.
    */
-  public async post<T>(endpoint: string, data: unknown): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const res = await fetch(url, {
+  public async post<T>(endpoint: string, data?: unknown): Promise<T> {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: "POST",
-      headers: this.defaultHeaders,
-      body: JSON.stringify(data),
+      headers: this.getHeaders(),
+      body: data !== undefined ? JSON.stringify(data) : undefined,
     });
-    return this.processResponse<T>(
-      res,
-      "An error occurred while posting the data.\n",
-    );
+
+    return this.processResponse<T>(response, "Failed to post data");
   }
 
   /**
@@ -97,17 +109,14 @@ export class ApiService {
    * @param data - The payload to update.
    * @returns JSON data of type T.
    */
-  public async put<T>(endpoint: string, data: unknown): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const res = await fetch(url, {
+  public async put<T>(endpoint: string, data?: unknown): Promise<T> {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: "PUT",
-      headers: this.defaultHeaders,
-      body: JSON.stringify(data),
+      headers: this.getHeaders(),
+      body: data !== undefined ? JSON.stringify(data) : undefined,
     });
-    return this.processResponse<T>(
-      res,
-      "An error occurred while updating the data.\n",
-    );
+
+    return this.processResponse<T>(response, "Failed to update data");
   }
 
   /**
@@ -115,15 +124,13 @@ export class ApiService {
    * @param endpoint - The API endpoint (e.g. "/users/123").
    * @returns JSON data of type T.
    */
+
   public async delete<T>(endpoint: string): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const res = await fetch(url, {
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
       method: "DELETE",
-      headers: this.defaultHeaders,
+      headers: this.getHeaders(),
     });
-    return this.processResponse<T>(
-      res,
-      "An error occurred while deleting the data.\n",
-    );
+    return this.processResponse<T>(response, "Failed to delete data");
   }
 }
+
