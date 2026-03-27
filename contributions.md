@@ -34,7 +34,7 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **[@githubUser1]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+| **[@fly-die]** | [25.03.2026]   | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/d3e57c410bf6a1ddf408fd714086f42d53316602]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/878220523cc16e151a1ed074492a17090c911cc2]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/33df94b0119d760801f60ce9ce85ba89c17f2b19]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/906df0ba680344c482a5d5ae42f4d4f53a8142c0] | Implemented bearer token handling in API service and integrated it into login flow (#4) | Required for authenticated endpoints like /users/me to work correctly. Commits appear aligned in time due to history rewrite (had to change author to match github username)|
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **[@githubUser2]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
