@@ -1,7 +1,7 @@
 .page {
   min-height: 100vh;
   padding: 20px 24px 48px;
-  background: linear-gradient(180deg, #f8f1e7 0%, #f4e7d3 55%, #ead7c0 100%);
+  background: linear-gradient(180deg, #ffe3bd 0%, #fedbab 55%, #ffe3bd 100%);
   display: flex;
   justify-content: center;
 }
@@ -27,7 +27,8 @@
 }
 
 .subtitle {
-  margin: 0 !important;
+  margin-top: 10px !important;
+  margin-bottom: -4px !important;
   color: #a52a1f !important;
   font-weight: 500 !important;
   text-align: left;
@@ -58,7 +59,7 @@
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #9a5a47;
+  color: #b56036;
   margin-bottom: 8px;
 }
 
@@ -71,16 +72,10 @@
   color: #7a5c4c;
 }
 
-.connected {
-  margin-top: 0;
-  margin-bottom: 8px;
-  color: #2f7a32;
-}
-
+.connected,
 .notConnected {
-  margin-top: 0;
-  margin-bottom: 8px;
-  color: #a52a1f;
+  margin: 0 !important;
+  line-height: 1 !important;
 }
 
 .section {
@@ -88,14 +83,14 @@
 }
 
 .sectionTitle {
-  color: #7a2118;
+  color: #b23123;
   margin-bottom: 16px;
 }
 
 .statValue {
   font-size: 36px;
   font-weight: 700;
-  color: #7f2418;
+  color: #a02d1d;
   line-height: 1.1;
 }
 
@@ -160,4 +155,30 @@
   .statValue {
     font-size: 30px;
   }
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statusDotConnected {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  background: #2f7a32;
+  box-shadow: 0 0 0 3px rgba(47, 122, 50, 0.18);
+  flex-shrink: 0;
+}
+
+.statusDotNotConnected {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  background: #a52a1f;
+  box-shadow: 0 0 0 3px rgba(165, 42, 31, 0.18);
+  flex-shrink: 0;
 }
