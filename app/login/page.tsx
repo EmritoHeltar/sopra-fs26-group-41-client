@@ -67,7 +67,7 @@ const Login: React.FC = () => {
         
         {errorMessage && (
           <Alert
-            message={errorMessage}
+            description={errorMessage}
             type="error"
             showIcon
             className={styles.errorAlert}
