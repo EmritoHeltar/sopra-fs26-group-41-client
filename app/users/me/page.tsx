@@ -6,10 +6,9 @@ import { Card, Spin, Typography } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MyProfile } from "@/types/user";
+import styles from "@/styles/page.module.css"
 
-
-const { Text } = Typography;
-
+const { Title, Text } = Typography;
 
 const mockProfile: MyProfile = {
   id: 0,
@@ -59,7 +58,7 @@ const Profile: React.FC = () => {
           }
 
           setProfile(mockProfile);
-          setError("Using fallback data (backend not ready)");
+          setError("Showing default data (backend not ready yet)");
         } else {
           setProfile(mockProfile);
           setError("Using fallback data");
@@ -74,41 +73,126 @@ const Profile: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="card-container">
-        <Spin size="large" />
+      <div className={styles.page}>
+        <div className={styles.content}>
+          <div className={styles.loadingWrap}>
+            <Spin size="large" />
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="card-container">
-        <Card title="Homepage">
-          <Text type="danger">{error ?? "Failed to load profile."}</Text>
-        </Card>
+      <div className={styles.page}>
+        <div className={styles.content}>
+          <Card className={styles.shellCard}>
+            <Text type="danger">{error ?? "Failed to load profile."}</Text>
+          </Card>
+        </div>
       </div>
     );
   }
 
+  const isConnected = profile.hasLetterboxdData;
+
   return (
-    <div className="card-container">
-      <Card title="Homepage">
-        {error && <Text type="warning">{error}</Text>}
-        <p>
-          <strong>{profile.username}</strong>
-        </p>
-        <p>Letterboxd connected: {profile.hasLetterboxdData ? "Yes" : "No"}</p>
-        <p>Movies logged: {profile.stats.moviesLogged}</p>
-        <p>Highly rated movies: {profile.stats.highlyRatedMovies}</p>
-        <p>
-          Top genres:{" "}
-          {profile.stats.topGenres.length > 0
-            ? profile.stats.topGenres.join(", ")
-            : "No genres available"}
-        </p>
-      </Card>
+    <div className={styles.page}>
+      <div className={styles.content}>
+        <div className={styles.hero}>
+          <Title level={1} className={styles.brand}>
+            Movieblendr.
+          </Title>
+          <Title level={3} className={styles.subtitle}>
+            My Profile
+          </Title>
+        </div>
+
+        <Card className={styles.shellCard}>
+          {error && (
+            <div className={styles.warningBox}>
+              <Text className={styles.warningLabel}>Fallback data</Text>
+              <br />
+              <Text className={styles.warningText}>{error}</Text>
+            </div>
+          )}
+
+          <div className={styles.infoGrid}>
+            <Card className={styles.softCard}>
+              <div className={styles.label}>Username </div>
+              <Title level={2} className={styles.username}>
+                {profile.username}
+              </Title>
+              <Text className={styles.helperText} style={{ marginTop: "-9px", display: "block" }}>Your account</Text>
+            </Card>
+
+            <Card className={styles.softCard}>
+              <div className={styles.label}>Letterboxd</div>
+              <div className={styles.statusRow}>
+                <span
+                  className={isConnected ? styles.statusDotConnected : styles.statusDotNotConnected}
+                />
+                <Title
+                  level={4}
+                  className={isConnected ? styles.connected : styles.notConnected}
+                >
+                  {isConnected ? "Connected" : "Not connected"}
+                </Title>
+              </div>
+              <Text className={styles.helperText} style={{ marginTop: "8px", display: "block" }}>
+                {isConnected
+                  ? "Your Letterboxd data is available and your homepage stats are shown below."
+                  : "No Letterboxd data uploaded yet. Your stats are shown with default values for now."}
+              </Text>
+            </Card>
+          </div>
+
+          <div className={styles.section}>
+            <Title level={3} className={styles.sectionTitle}>
+              Stats
+            </Title>
+
+            <div className={styles.infoGrid}>
+              <Card className={styles.softCard}>
+                <div className={styles.label}>Movies logged</div>
+                <div className={styles.statValue}>{profile.stats.moviesLogged}</div>
+                <Text className={styles.helperText} style={{ marginTop: "9px", display: "block" }}>
+                  {profile.stats.moviesLogged > 100
+                    ? "That’s a lot of movies!"
+                    : "Still warming up, keep watching!"}
+                </Text>
+              </Card>
+
+              <Card className={styles.softCard}>
+                <div className={styles.label}>Highly rated</div>
+                <div className={styles.statValue}>{profile.stats.highlyRatedMovies}</div>
+                <Text className={styles.helperText} style={{ marginTop: "9px", display: "block" }} >4.5★ and above</Text>
+              </Card>
+            </div>
+          </div>
+
+          <div className={styles.section}>
+            <Title level={3} className={styles.sectionTitle}>
+              Top Genres
+            </Title>
+
+            {profile.stats.topGenres.length > 0 ? (
+              <div className={styles.genreWrap}>
+                {profile.stats.topGenres.map((genre) => (
+                  <span key={genre} className={styles.genrePill}>
+                    {genre}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <Text className={styles.helperText}>No genres available yet.</Text>
+            )}
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };
 
-export default Profile;
+export default Profile; 
