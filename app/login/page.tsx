@@ -8,8 +8,7 @@ import { LoginRequest, LoginResponse, User } from "@/types/user";
 import { Button, Form, Input, Typography, Alert } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
-// Optionally, you can import a CSS module or file for additional styling:
-// import styles from "@/styles/page.module.css";
+import styles from "../styles/page.module.css";
 
 interface FormFieldProps {
   label: string;
@@ -51,19 +50,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#FDFBD4",
-        padding: "20px",
-      }}
-    >
-      <div style={{ textAlign: "center", marginBottom: "30px" }}>
-        <Typography.Title level={2} style={{ color: "#d32f2f", margin: 0 }}>
+    <div className={styles.loginContainer}>
+      <div className={styles.headerSection}>
+        <Typography.Title level={2} className={styles.title}>
           Movieblendr.
         </Typography.Title>
         <Typography.Text type="secondary">
@@ -71,20 +60,8 @@ const Login: React.FC = () => {
         </Typography.Text>
       </div>
 
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "400px",
-          background: "#fff",
-          padding: "40px",
-          borderRadius: "12px",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <Typography.Title
-          level={3}
-          style={{ textAlign: "center", color: "#d32f2f", marginBottom: "24px" }}
-        >
+      <div className={styles.formCard}>
+        <Typography.Title level={3} className={styles.formTitle}>
           Login
         </Typography.Title>
         
@@ -93,7 +70,7 @@ const Login: React.FC = () => {
             message={errorMessage}
             type="error"
             showIcon
-            style={{ marginBottom: "20px" }}
+            className={styles.errorAlert}
           />
         )}
 
@@ -107,21 +84,21 @@ const Login: React.FC = () => {
         >
           <Form.Item
             name="username"
-            label={<span style={{ color: "#d32f2f" }}>Username</span>}
+            label={<span className={styles.labelSpan}>Username</span>}
             rules={[{ required: true, message: "Please input your username!" }]}
           >
             <Input
-              prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+              prefix={<UserOutlined className={styles.inputIcon} />}
               placeholder="Enter your username"
             />
           </Form.Item>
           <Form.Item
             name="password"
-            label={<span style={{ color: "#d32f2f" }}>Password</span>}
+            label={<span className={styles.labelSpan}>Password</span>}
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input.Password
-              prefix={<LockOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+              prefix={<LockOutlined className={styles.inputIcon} />}
               placeholder="Enter your password"
             />
           </Form.Item>
@@ -130,20 +107,15 @@ const Login: React.FC = () => {
               type="primary"
               htmlType="submit"
               loading={isLoading}
-              style={{
-                width: "100%",
-                backgroundColor: "#d32f2f",
-                borderColor: "#d32f2f",
-                marginTop: "10px",
-              }}
+              className={styles.loginButton}
             >
               Login
             </Button>
           </Form.Item>
         </Form>
-        <div style={{ textAlign: "center", marginTop: "10px" }}>
+        <div className={styles.registerTextContainer}>
           <Typography.Text>
-            Don't have an account? <Link href="/register" style={{ color: "#1890ff" }}>Register</Link>
+            Don't have an account? <Link href="/register" className={styles.registerLink}>Register</Link>
           </Typography.Text>
         </div>
       </div>
