@@ -82,7 +82,7 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
-  }, [apiService, clearToken, router]);
+  }, []);
 
   if (isLoading) {
     return (
