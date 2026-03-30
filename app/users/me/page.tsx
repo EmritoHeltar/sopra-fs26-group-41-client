@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Spin, Typography } from "antd";
+import { Card, Spin, Typography, Button } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MyProfile } from "@/types/user";
@@ -29,6 +29,19 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<MyProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleLogout = async () => {
+    try {
+      await apiService.post("/logout", {});
+    } catch (_) {
+      // ignore errors, we still clear token
+    } finally {
+      clearToken();
+      router.replace("/login");
+    }
+  };
+
+  const [isHoveringLogout, setIsHoveringLogout] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -100,13 +113,34 @@ const Profile: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.content}>
-        <div className={styles.hero}>
-          <Title level={1} className={styles.brand}>
-            Movieblendr.
-          </Title>
-          <Title level={3} className={styles.subtitle}>
-            My Profile
-          </Title>
+        <div className={styles.hero} style={{ position: "relative" }}>
+          <div>
+            <Title level={1} className={styles.brand}>
+              Movieblendr.
+            </Title>
+            <Title level={3} className={styles.subtitle}>
+              My Profile
+            </Title>
+          </div>
+
+          <Button
+            onClick={handleLogout}
+            onMouseEnter={() => setIsHoveringLogout(true)}
+            onMouseLeave={() => setIsHoveringLogout(false)}
+            style={{
+              position: "absolute",
+              top: "0px",
+              right: "0px",
+              borderRadius: "999px",
+              border: "1px solid rgba(255, 244, 235, 0.68)",
+              background: isHoveringLogout ? "#2a2422" : "#1a1615",
+              color: "#fff4eb",
+              fontWeight: 600,
+              transition: "all 0.2s ease",
+            }}
+          >
+            Log out
+          </Button>
         </div>
 
         <Card className={styles.shellCard}>
