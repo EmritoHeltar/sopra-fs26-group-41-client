@@ -3,68 +3,124 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #FDFBD4;
-  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #ffe3bd 0%, #fedbab 55%, #ffe3bd 100%);
+  padding: 24px;
 }
 
 .headerSection {
-  text-align: center;
-  margin-bottom: 30px;
+  width: 100%;
+  max-width: 520px;
+  text-align: left;
+  margin-bottom: 18px;
 }
 
 .title {
-  color: #d32f2f !important;
+  color: #a52a1f !important;
   margin: 0 !important;
+  font-size: 44px !important;
+  line-height: 1.05 !important;
 }
 
 .formCard {
   width: 100%;
-  max-width: 400px;
-  background: #fff;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 520px;
+  background: linear-gradient(180deg, rgba(24, 20, 18, 0.96) 0%, rgba(16, 14, 13, 0.98) 100%);
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid rgba(165, 42, 31, 0.22);
+  box-shadow: 0 14px 40px rgba(120, 34, 20, 0.1);
 }
 
 .formTitle {
-  text-align: center;
-  color: #d32f2f !important;
+  text-align: left;
+  color: #fff4eb !important;
   margin-bottom: 24px !important;
 }
 
 .errorAlert {
   margin-bottom: 20px;
+  border-radius: 14px;
+  background: #fff1e8 !important;
+  border: 1px solid #d8846d !important;
+  color: #8a2d1f !important;
+}
+
+.errorAlert :global(.ant-alert-message),
+.errorAlert :global(.ant-alert-description) {
+  color: #8a2d1f !important;
+  font-weight: 500;
+}
+
+.errorAlert :global(.anticon) {
+  color: #a52a1f !important;
 }
 
 .labelSpan {
-  color: #d32f2f;
+  color: #f2c3ab;
 }
 
 .inputIcon {
-  color: rgba(0, 0, 0, 0.25);
+  color: #5a2a1f;
+}
+
+.formCard :global(.ant-input-affix-wrapper .anticon) {
+  color: #5a2a1f !important;
 }
 
 .loginButton {
   width: 100%;
-  background-color: #d32f2f !important;
-  border-color: #d32f2f !important;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  border: none !important;
   color: #fff !important;
   margin-top: 10px;
+  border-radius: 12px !important;
+  font-weight: 600;
+  height: 42px;
+  box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18);
 }
 
 .loginButton:hover {
-  background-color: #b71c1c !important;
-  border-color: #b71c1c !important;
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  color: #fff !important;
 }
 
 .registerTextContainer {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
 .registerLink {
-  color: #1890ff;
+  color: #f0b08d;
+}
+
+.formCard :global(.ant-input-affix-wrapper),
+.formCard :global(.ant-input-password) {
+  background: rgba(255, 250, 244, 0.94) !important;
+  border: 1px solid #e5b8a7 !important;
+  border-radius: 12px !important;
+  padding: 6px 12px !important;
+}
+
+.formCard :global(.ant-input),
+.formCard :global(.ant-input-password input) {
+  color: #3b241d !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.formCard :global(.ant-input::placeholder),
+.formCard :global(.ant-input-password input::placeholder) {
+  color: #8f6d60 !important;
+}
+
+.formCard :global(.ant-form-item-label > label) {
+  color: #fff4eb !important;
+}
+
+.formCard :global(.ant-card-body) {
+  padding: 0 !important;
 }
 
 /* --- Users/Me Profile Styling --- */
@@ -225,6 +281,19 @@
 
   .statValue {
     font-size: 30px;
+  }
+
+  .loginContainer {
+    padding: 16px;
+  }
+
+  .headerSection,
+  .formCard {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 32px !important;
   }
 }
 
