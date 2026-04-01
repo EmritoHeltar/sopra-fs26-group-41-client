@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Spin, Typography, Button, Space } from "antd";
+import { Card, Spin, Typography, Button, Space, Input } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MyProfile } from "@/types/user";
@@ -26,6 +26,7 @@ const Profile: React.FC = () => {
   const apiService = useApi();
   const [isUnauthorized, setIsUnauthorized] = useState(false);
   const { clear: clearToken } = useLocalStorage<string>("token", "");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [profile, setProfile] = useState<MyProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -158,8 +159,8 @@ const Profile: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.content}>
-        <div className={styles.hero} style={{ position: "relative" }}>
-          <div>
+        <div className={styles.hero}>
+          <div className={styles.heroLeft}>
             <Title level={1} className={styles.brand}>
               Movieblendr.
             </Title>
@@ -168,26 +169,31 @@ const Profile: React.FC = () => {
             </Title>
           </div>
 
-          <Button
-            onClick={handleLogout}
-            onMouseEnter={() => setIsHoveringLogout(true)}
-            onMouseLeave={() => setIsHoveringLogout(false)}
-            style={{
-              position: "absolute",
-              top: "0px",
-              right: "0px",
-              borderRadius: "999px",
-              border: "1px solid rgba(255, 244, 235, 0.68)",
-              background: isHoveringLogout ? "#2a2422" : "#1a1615",
-              color: "#fff4eb",
-              fontWeight: 600,
-              transition: "all 0.2s ease",
-            }}
-          >
-            Log out
-          </Button>
-        </div>
+          <div className={styles.heroRight}>
+            <Input
+              placeholder="Search movies..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              className={styles.searchInput}
+            />
 
+            <Button
+              onClick={handleLogout}
+              onMouseEnter={() => setIsHoveringLogout(true)}
+              onMouseLeave={() => setIsHoveringLogout(false)}
+              style={{
+                borderRadius: "999px",
+                border: "1px solid rgba(255, 244, 235, 0.68)",
+                background: isHoveringLogout ? "#2a2422" : "#1a1615",
+                color: "#fff4eb",
+                fontWeight: 600,
+                transition: "all 0.2s ease",
+              }}
+            >
+              Log out
+            </Button>
+          </div>
+        </div>
         <Card className={styles.shellCard}>
           {error && (
             <div className={styles.warningBox}>

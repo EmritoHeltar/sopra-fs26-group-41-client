@@ -141,8 +141,9 @@
 .hero {
   margin-bottom: 18px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: flex-start;
+  gap: 20px;
 }
 
 .brand {
@@ -295,6 +296,20 @@
   .title {
     font-size: 32px !important;
   }
+
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .heroRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
 }
 
 .statusRow {
@@ -357,4 +372,34 @@
 .authButton:hover {
   background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
   color: #fff !important;
+}
+
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.heroRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.searchInput {
+  width: 340px;
+}
+
+.searchInput :global(.ant-input) {
+  background: rgba(255, 250, 244, 0.94) !important;
+  border: 1px solid #e5b8a7 !important;
+  border-radius: 999px !important;
+  color: #3b241d !important;
+  box-shadow: none !important;
+  padding: 8px 16px !important;
+  height: 42px !important;
+}
+
+.searchInput :global(.ant-input::placeholder) {
+  color: #8f6d60 !important;
 }
