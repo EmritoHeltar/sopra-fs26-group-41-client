@@ -110,23 +110,31 @@ const Profile: React.FC = () => {
   if (isUnauthorized) {
     return (
       <div className={styles.page}>
-        <div className={styles.content}>
-          <Card className={styles.shellCard}>
+        <div className={`${styles.content} ${styles.centerWrapper}`}>
+          <Card className={`${styles.shellCard} ${styles.authCard}`}>
             <Title level={2} className={styles.username}>
               Access denied
             </Title>
-            <Text className={styles.helperText} style={{ display: "block", marginTop: "8px" }}>
+
+            <Text className={styles.helperText} style={{ display: "block", marginTop: "10px" }}>
               You need to be logged in to view your profile page.
             </Text>
 
-            <Space style={{ marginTop: "20px" }}>
-              <Button type="primary" onClick={() => router.replace("/login")}>
+            <div className={styles.authActions}>
+              <Button
+                onClick={() => router.replace("/login")}
+                className={styles.authButton}
+              >
                 Go to Login
               </Button>
-              <Button onClick={() => router.replace("/register")}>
+
+              <Button
+                onClick={() => router.replace("/register")}
+                className={styles.authButton}
+              >
                 Register
               </Button>
-            </Space>
+            </div>
           </Card>
         </div>
       </div>

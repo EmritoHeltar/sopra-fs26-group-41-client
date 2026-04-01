@@ -322,3 +322,39 @@
   box-shadow: 0 0 0 3px rgba(165, 42, 31, 0.18);
   flex-shrink: 0;
 }
+
+.centerWrapper {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.authCard {
+  width: 50%;
+  max-width: 720px;
+  text-align: center;
+  padding: 32px;
+}
+
+.authActions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.authButton {
+  border-radius: 999px !important;
+  border: none !important;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18);
+}
+
+.authButton:hover {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  color: #fff !important;
+}
