@@ -33,8 +33,7 @@ const Profile: React.FC = () => {
   const handleLogout = async () => {
     try {
       await apiService.post("/logout", {});
-    } catch (_) {
-      // ignore errors, we still clear token
+    } catch {
     } finally {
       clearToken();
       router.replace("/login");
@@ -82,6 +81,7 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (isLoading) {
@@ -229,4 +229,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile; 
+export default Profile;

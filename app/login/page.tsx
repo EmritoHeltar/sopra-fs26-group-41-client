@@ -4,16 +4,12 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation"; // use NextJS router for navigation
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { LoginRequest, LoginResponse} from "@/types/user";
+import { LoginRequest, LoginResponse } from "@/types/user";
 import { Button, Form, Input, Typography, Alert } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
 
-interface FormFieldProps {
-  label: string;
-  value: string;
-}
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -64,7 +60,7 @@ const Login: React.FC = () => {
         <Typography.Title level={3} className={styles.formTitle}>
           Login
         </Typography.Title>
-        
+
         {errorMessage && (
           <Alert
             description={errorMessage}
