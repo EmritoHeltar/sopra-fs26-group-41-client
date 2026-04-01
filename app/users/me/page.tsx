@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Spin, Typography, Button } from "antd";
+import { Card, Spin, Typography, Button, Space } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MyProfile } from "@/types/user";
@@ -24,6 +24,7 @@ const mockProfile: MyProfile = {
 const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
   const { clear: clearToken } = useLocalStorage<string>("token", "");
 
   const [profile, setProfile] = useState<MyProfile | null>(null);
@@ -45,6 +46,14 @@ const Profile: React.FC = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setIsUnauthorized(true);
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const response = await apiService.get<Partial<MyProfile>>("/users/me");
 
@@ -60,18 +69,20 @@ const Profile: React.FC = () => {
         };
 
         setProfile(safeProfile);
+        setIsUnauthorized(false);
+        setError(null);
       } catch (err) {
         if (err instanceof Error) {
           const status = (err as { status?: number }).status;
 
-          if (status === 401) {
+          if (status === 400 || status === 401 || status === 403) {
             clearToken();
-            router.replace("/login");
-            return;
+            setIsUnauthorized(true);
+            setError("You need to log in to view this page.");
+          } else {
+            setProfile(mockProfile);
+            setError("Showing default data (backend not ready yet)");
           }
-
-          setProfile(mockProfile);
-          setError("Showing default data (backend not ready yet)");
         } else {
           setProfile(mockProfile);
           setError("Using fallback data");
@@ -91,6 +102,32 @@ const Profile: React.FC = () => {
           <div className={styles.loadingWrap}>
             <Spin size="large" />
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isUnauthorized) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.content}>
+          <Card className={styles.shellCard}>
+            <Title level={2} className={styles.username}>
+              Access denied
+            </Title>
+            <Text className={styles.helperText} style={{ display: "block", marginTop: "8px" }}>
+              You need to be logged in to view your profile page.
+            </Text>
+
+            <Space style={{ marginTop: "20px" }}>
+              <Button type="primary" onClick={() => router.replace("/login")}>
+                Go to Login
+              </Button>
+              <Button onClick={() => router.replace("/register")}>
+                Register
+              </Button>
+            </Space>
+          </Card>
         </div>
       </div>
     );
