@@ -16,7 +16,7 @@ const Register: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleRegister = async (values: any) => {
+  const handleRegister = async (values: { username: string; password: string }) => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
