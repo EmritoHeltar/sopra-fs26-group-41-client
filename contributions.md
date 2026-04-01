@@ -48,11 +48,12 @@ reason).
 
 ---
 
-## Contributions Week 2 - [Begin Date] to [End Date]
+## Contributions Week 2 - [30.03.2026] to [05.04.2026]
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **[@githubUser1]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@fly-die** | 01.04.2026   | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/ad243f3d2ce397efeb4a4a1637462a465dd1141d] | Implemented search bar UI on /users/me (#8) | Adds input and integrates search bar into homepage layout according to mockup, no backend interaction yet |
+| **@fly-die** | 01.04.2026   | [https://github.com/fabianbaechli/sopra-fs26-group-41-server/commit/085b656cb512869c1d55c14843a39a4861b49be3]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/bcb2e75987b9936f1e0a7c02838566d8e8b608be]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/110cc5c90b2972eb923c92fa4e45235f176f2b4e]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/2584f8050b09f079da77be0dbbb02fed88367b12]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/4f159ae631497f163290592e6000ca0a659c75f0]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/52fd90b9e33e3fa11ca80c1f48e52418d0c27f92]| Various bug fixes in frontend & backend (#2, #3 & more) | Bug fixes, minor adjustments. May not count as a contribution but added for completeness/consistency. |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **[@githubUser2]** | [date]   | [Link to Commit 1] | [Brief description of the task] | [Why this contribution is relevant] |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
