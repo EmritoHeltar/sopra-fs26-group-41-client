@@ -7,26 +7,36 @@ import { Button, Form, Input, Typography, Alert } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const Register: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
+  const { set: setToken } = useLocalStorage<string>("token", "");
   const [form] = Form.useForm();
-  
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleRegister = async (values: any) => {
+  const handleRegister = async (values: { username: string; password: string }) => {
     setIsLoading(true);
     setErrorMessage(null);
+
     try {
       await apiService.post("/register", values);
-      router.push("/login");
+
+      const loginResponse = await apiService.post<{ token: string }>("/login", {
+        username: values.username,
+        password: values.password,
+      });
+
+      setToken(loginResponse.token);
+      router.replace("/users/me");
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(`Registration failed: ${error.message}`);
       } else {
-        setErrorMessage("Registration failed. Username might be taken.");
+        setErrorMessage("Registration failed. Username might already be taken.");
       }
     } finally {
       setIsLoading(false);
@@ -48,7 +58,7 @@ const Register: React.FC = () => {
         <Typography.Title level={3} className={styles.formTitle}>
           Create Account
         </Typography.Title>
-        
+
         {errorMessage && (
           <Alert
             description={errorMessage}
