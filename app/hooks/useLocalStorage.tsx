@@ -32,8 +32,12 @@ export default function useLocalStorage<T>(
     if (typeof window === "undefined") return; // SSR safeguard
     try {
       const stored = globalThis.localStorage.getItem(key);
-      if (stored) {
-        setValue(JSON.parse(stored) as T);
+      if (stored !== null) {
+        try {
+          setValue(JSON.parse(stored) as T);
+        } catch {
+          setValue(stored as T);
+        }
       }
     } catch (error) {
       console.error(`Error reading localStorage key "${key}":`, error);
@@ -44,7 +48,9 @@ export default function useLocalStorage<T>(
   const set = (newVal: T) => {
     setValue(newVal);
     if (typeof window !== "undefined") {
-      globalThis.localStorage.setItem(key, JSON.stringify(newVal));
+      const valueToStore =
+        typeof newVal === "string" ? newVal : JSON.stringify(newVal);
+      globalThis.localStorage.setItem(key, valueToStore);
     }
   };
 

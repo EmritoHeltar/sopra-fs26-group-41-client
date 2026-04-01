@@ -1,48 +1,32 @@
-"use client"; // For components that need React hooks and browser APIs, SSR (server side rendering) has to be disabled. Read more here: https://nextjs.org/docs/pages/building-your-application/rendering/server-side-rendering
+"use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation"; // use NextJS router for navigation
+import { useRouter } from "next/navigation";
 import { useApi } from "@/hooks/useApi";
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { LoginRequest, LoginResponse, User } from "@/types/user";
 import { Button, Form, Input, Typography, Alert } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
 
-interface FormFieldProps {
-  label: string;
-  value: string;
-}
-
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
   const [form] = Form.useForm();
+  
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // useLocalStorage hook example use
-  // The hook returns an object with the value and two functions
-  // Simply choose what you need from the hook:
-  const {
-    // value: token, // is commented out because we do not need the token value
-    set: setToken, // we need this method to set the value of the token to the one we receive from the POST request to the backend server API
-    // clear: clearToken, // is commented out because we do not need to clear the token when logging in
-  } = useLocalStorage<string>("token", ""); // note that the key we are selecting is "token" and the default value we are setting is an empty string
-  // if you want to pick a different token, i.e "usertoken", the line above would look as follows: } = useLocalStorage<string>("usertoken", "");
 
-  const handleLogin = async (values: LoginRequest) => {
+  const handleRegister = async (values: any) => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const response = await apiService.post<LoginResponse>("/login", values);
-      setToken(response.token);
-      router.push("/users/me");
+      await apiService.post("/register", values);
+      router.push("/login");
     } catch (error) {
       if (error instanceof Error) {
-        setErrorMessage(`Login failed: ${error.message}`);
+        setErrorMessage(`Registration failed: ${error.message}`);
       } else {
-        setErrorMessage("Login failed. Please check your credentials.");
+        setErrorMessage("Registration failed. Username might be taken.");
       }
     } finally {
       setIsLoading(false);
@@ -56,13 +40,13 @@ const Login: React.FC = () => {
           Movieblendr.
         </Typography.Title>
         <Typography.Text type="secondary">
-          Welcome back! Login to continue
+          Create your account to start blending
         </Typography.Text>
       </div>
 
       <div className={styles.formCard}>
         <Typography.Title level={3} className={styles.formTitle}>
-          Login
+          Create Account
         </Typography.Title>
         
         {errorMessage && (
@@ -76,30 +60,30 @@ const Login: React.FC = () => {
 
         <Form
           form={form}
-          name="login"
+          name="register"
           size="large"
           layout="vertical"
-          onFinish={handleLogin}
+          onFinish={handleRegister}
           requiredMark={false}
         >
           <Form.Item
             name="username"
             label={<span className={styles.labelSpan}>Username</span>}
-            rules={[{ required: true, message: "Please input your username!" }]}
+            rules={[{ required: true, message: "Please choose a username!" }]}
           >
             <Input
               prefix={<UserOutlined className={styles.inputIcon} />}
-              placeholder="Enter your username"
+              placeholder="Choose a username"
             />
           </Form.Item>
           <Form.Item
             name="password"
             label={<span className={styles.labelSpan}>Password</span>}
-            rules={[{ required: true, message: "Please input your password!" }]}
+            rules={[{ required: true, message: "Please create a secure password!" }]}
           >
             <Input.Password
               prefix={<LockOutlined className={styles.inputIcon} />}
-              placeholder="Enter your password"
+              placeholder="Create a secure password"
             />
           </Form.Item>
           <Form.Item>
@@ -109,13 +93,13 @@ const Login: React.FC = () => {
               loading={isLoading}
               className={styles.loginButton}
             >
-              Login
+              Create Account
             </Button>
           </Form.Item>
         </Form>
         <div className={styles.registerTextContainer}>
           <Typography.Text>
-            Don't have an account? <Link href="/register" className={styles.registerLink}>Register</Link>
+            Already have an account? <Link href="/login" className={styles.registerLink}>Login</Link>
           </Typography.Text>
         </div>
       </div>
@@ -123,4 +107,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;
