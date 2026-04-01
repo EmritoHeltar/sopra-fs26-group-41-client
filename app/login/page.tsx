@@ -115,7 +115,7 @@ const Login: React.FC = () => {
         </Form>
         <div className={styles.registerTextContainer}>
           <Typography.Text>
-            Don't have an account? <Link href="/register" className={styles.registerLink}>Register</Link>
+            Don&apos;t have an account? <Link href="/register" className={styles.registerLink}>Register</Link>
           </Typography.Text>
         </div>
       </div>
