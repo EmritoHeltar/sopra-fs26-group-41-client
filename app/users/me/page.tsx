@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Spin, Typography, Button, Space, Input } from "antd";
+import { Card, Spin, Typography, Button, Input } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MyProfile } from "@/types/user";
@@ -24,7 +24,6 @@ const mockProfile: MyProfile = {
 const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
-  const [isUnauthorized, setIsUnauthorized] = useState(false);
   const { clear: clearToken } = useLocalStorage<string>("token", "");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -50,8 +49,7 @@ const Profile: React.FC = () => {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        setIsUnauthorized(true);
-        setIsLoading(false);
+        router.replace("/login");
         return;
       }
 
@@ -70,7 +68,6 @@ const Profile: React.FC = () => {
         };
 
         setProfile(safeProfile);
-        setIsUnauthorized(false);
         setError(null);
       } catch (err) {
         if (err instanceof Error) {
@@ -78,8 +75,8 @@ const Profile: React.FC = () => {
 
           if (status === 400 || status === 401 || status === 403) {
             clearToken();
-            setIsUnauthorized(true);
-            setError("You need to log in to view this page.");
+            router.replace("/login");
+            return;
           } else {
             setProfile(mockProfile);
             setError("Showing default data (backend not ready yet)");
@@ -103,40 +100,6 @@ const Profile: React.FC = () => {
           <div className={styles.loadingWrap}>
             <Spin size="large" />
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isUnauthorized) {
-    return (
-      <div className={styles.page}>
-        <div className={`${styles.content} ${styles.centerWrapper}`}>
-          <Card className={`${styles.shellCard} ${styles.authCard}`}>
-            <Title level={2} className={styles.username}>
-              Access denied
-            </Title>
-
-            <Text className={styles.helperText} style={{ display: "block", marginTop: "10px" }}>
-              You need to be logged in to view your profile page.
-            </Text>
-
-            <div className={styles.authActions}>
-              <Button
-                onClick={() => router.replace("/login")}
-                className={styles.authButton}
-              >
-                Go to Login
-              </Button>
-
-              <Button
-                onClick={() => router.replace("/register")}
-                className={styles.authButton}
-              >
-                Register
-              </Button>
-            </div>
-          </Card>
         </div>
       </div>
     );
@@ -280,4 +243,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile; 
+export default Profile;
