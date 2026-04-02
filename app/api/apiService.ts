@@ -132,5 +132,24 @@ export class ApiService {
     });
     return this.processResponse<T>(response, "Failed to delete data");
   }
+
+  public async upload<T>(endpoint: string, formData: FormData): Promise<T> {
+    const headers: HeadersInit = {};
+
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+    }
+
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+
+    return this.processResponse<T>(response, "Failed to upload Letterboxd data");
+  }
 }
 

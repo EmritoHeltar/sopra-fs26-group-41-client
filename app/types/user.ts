@@ -21,3 +21,10 @@ export interface MyProfile {
   hasLetterboxdData: boolean;
   stats: UserStats;
 }
+
+export interface LetterboxdImportResponse {
+  id: number;
+  username: string;
+  hasLetterboxdData: boolean;
+  stats: UserStats;
+}
