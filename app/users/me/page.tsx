@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Card, Spin, Typography, Button, Input } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import type { MyProfile } from "@/types/user";
+import type { MyProfile, LetterboxdImportResponse } from "@/types/user";
 import styles from "@/styles/page.module.css"
 
 const { Title, Text } = Typography;
@@ -30,19 +30,44 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<MyProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isHoveringLogout, setIsHoveringLogout] = useState(false);
+
+
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleLogout = async () => {
     try {
       await apiService.post("/logout", {});
-    } catch (_) {
-      // ignore errors, we still clear token
+    } catch {
     } finally {
       clearToken();
       router.replace("/login");
     }
   };
 
-  const [isHoveringLogout, setIsHoveringLogout] = useState(false);
+  // to be called by upload dialog (#5)
+  const handleLetterboxdUpload = async (file: File) => {
+    setUploadError(null);
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await apiService.upload<LetterboxdImportResponse>("/import", formData);
+
+      const updatedProfile: MyProfile = {
+        id: response.id,
+        username: response.username,
+        hasLetterboxdData: response.hasLetterboxdData,
+        stats: {
+          moviesLogged: response.stats?.moviesLogged ?? 0,
+          highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0,
+          topGenres: response.stats?.topGenres ?? [],
+        },
+      };
 
   useEffect(() => {
     const fetchProfile = async () => {
