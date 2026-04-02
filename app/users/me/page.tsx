@@ -69,6 +69,21 @@ const Profile: React.FC = () => {
         },
       };
 
+      setProfile(updatedProfile);
+      setError(null);
+      setSelectedFile(null);
+    } catch (err) {
+      if (err instanceof Error) {
+        setUploadError(err.message);
+      } else {
+        setUploadError("Upload failed. Please try again.");
+      }
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
