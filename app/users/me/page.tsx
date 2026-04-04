@@ -316,6 +316,78 @@ const Profile: React.FC = () => {
           </div>
         </Card>
       </div>
+
+      {isUploadDialogOpen && (
+        <div className={styles.modalOverlay} onClick={handleCloseDialog}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <Title level={3} className={styles.modalTitle}>
+              {isConnected ? "Update Letterboxd Data" : "Upload Letterboxd Data"}
+            </Title>
+            <Text className={styles.modalSubtitle}>
+              {isConnected 
+                ? "Replace your current Movieblendr stats with a fresh Letterboxd export." 
+                : "Import your Letterboxd history to generate your statistics."}
+            </Text>
+
+            <div className={styles.instructionBlock}>
+              <Text className={styles.instructionText}>How to get your data:</Text>
+              <ul className={styles.instructionList}>
+                <li>Go to <a href="https://letterboxd.com/settings/data/" target="_blank" rel="noopener noreferrer" className={styles.externalLink}>Letterboxd Data Settings</a></li>
+                <li>Download your account export (ZIP)</li>
+                <li>Upload the <strong>entire downloaded .zip file</strong> here</li>
+              </ul>
+            </div>
+
+            {uploadError && (
+              <div className={styles.errorAlert} style={{ marginBottom: "20px" }}>
+                <Text type="danger">{uploadError}</Text>
+              </div>
+            )}
+
+            <div 
+              className={`${styles.fileDropZone} ${selectedFile ? styles.fileDropZoneActive : ''}`} 
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input 
+                type="file" 
+                accept=".zip" 
+                ref={fileInputRef} 
+                style={{ display: 'none' }} 
+                onChange={handleFileSelect} 
+              />
+              {selectedFile ? (
+                <div className={styles.fileSelectedFeedback}>
+                  <Text className={styles.selectedFileText}>📦 {selectedFile.name}</Text>
+                  <Text className={styles.fileReadyText}>Ready to upload</Text>
+                </div>
+              ) : (
+                <div className={styles.dropZoneEmpty}>
+                  <Text className={styles.dropZonePrompt}>Click to browse</Text>
+                  <Text className={styles.dropZoneSecondary}>ZIP archive only</Text>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.modalActions}>
+              <Button 
+                onClick={handleCloseDialog} 
+                className={styles.modalCancelButton}
+                disabled={isUploading}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleConfirmUpload} 
+                className={styles.modalConfirmButton}
+                disabled={!selectedFile || isUploading}
+                loading={isUploading}
+              >
+                {isUploading ? "Uploading..." : "Confirm"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
