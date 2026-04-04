@@ -9,6 +9,7 @@ import type { MyProfile, LetterboxdImportResponse } from "@/types/user";
 import styles from "@/styles/page.module.css"
 
 const { Title, Text } = Typography;
+const { Search } = Input;
 
 const mockProfile: MyProfile = {
   id: 0,
@@ -30,8 +31,6 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<MyProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isHoveringLogout, setIsHoveringLogout] = useState(false);
-
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -63,6 +62,16 @@ const Profile: React.FC = () => {
     if (selectedFile) {
       handleLetterboxdUpload(selectedFile);
     }
+  };
+
+  const handleSearch = () => {
+    const trimmedQuery = searchQuery.trim();
+
+    if (!trimmedQuery) {
+      return;
+    }
+
+    router.push(`/results?query=${encodeURIComponent(trimmedQuery)}`);
   };
 
   const handleLogout = async () => {
@@ -160,8 +169,7 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [apiService, clearToken, router]);
 
   if (isLoading) {
     return (
@@ -203,26 +211,16 @@ const Profile: React.FC = () => {
           </div>
 
           <div className={styles.heroRight}>
-            <Input
+            <Search
+              className={styles.searchInput}
               placeholder="Search movies..."
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              className={styles.searchInput}
+              onSearch={handleSearch}
+              enterButton
             />
 
-            <Button
-              onClick={handleLogout}
-              onMouseEnter={() => setIsHoveringLogout(true)}
-              onMouseLeave={() => setIsHoveringLogout(false)}
-              style={{
-                borderRadius: "999px",
-                border: "1px solid rgba(255, 244, 235, 0.68)",
-                background: isHoveringLogout ? "#2a2422" : "#1a1615",
-                color: "#fff4eb",
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-              }}
-            >
+            <Button className={styles.authButton} onClick={handleLogout}>
               Log out
             </Button>
           </div>
@@ -264,8 +262,8 @@ const Profile: React.FC = () => {
                   : "No Letterboxd data uploaded yet. Your stats are shown with default values for now."}
               </Text>
 
-              <Button 
-                onClick={handleOpenDialog} 
+              <Button
+                onClick={handleOpenDialog}
                 className={styles.uploadTriggerButton}
                 type="primary"
               >
@@ -325,8 +323,8 @@ const Profile: React.FC = () => {
               {isConnected ? "Update Letterboxd Data" : "Upload Letterboxd Data"}
             </Title>
             <Text className={styles.modalSubtitle}>
-              {isConnected 
-                ? "Replace your current Movieblendr stats with a fresh Letterboxd export." 
+              {isConnected
+                ? "Replace your current Movieblendr stats with a fresh Letterboxd export."
                 : "Import your Letterboxd history to generate your statistics."}
             </Text>
 
@@ -345,16 +343,16 @@ const Profile: React.FC = () => {
               </div>
             )}
 
-            <div 
-              className={`${styles.fileDropZone} ${selectedFile ? styles.fileDropZoneActive : ''}`} 
+            <div
+              className={`${styles.fileDropZone} ${selectedFile ? styles.fileDropZoneActive : ''}`}
               onClick={() => fileInputRef.current?.click()}
             >
-              <input 
-                type="file" 
-                accept=".zip" 
-                ref={fileInputRef} 
-                style={{ display: 'none' }} 
-                onChange={handleFileSelect} 
+              <input
+                type="file"
+                accept=".zip"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleFileSelect}
               />
               {selectedFile ? (
                 <div className={styles.fileSelectedFeedback}>
@@ -370,15 +368,15 @@ const Profile: React.FC = () => {
             </div>
 
             <div className={styles.modalActions}>
-              <Button 
-                onClick={handleCloseDialog} 
+              <Button
+                onClick={handleCloseDialog}
                 className={styles.modalCancelButton}
                 disabled={isUploading}
               >
                 Cancel
               </Button>
-              <Button 
-                onClick={handleConfirmUpload} 
+              <Button
+                onClick={handleConfirmUpload}
                 className={styles.modalConfirmButton}
                 disabled={!selectedFile || isUploading}
                 loading={isUploading}
