@@ -177,6 +177,11 @@ const Profile: React.FC = () => {
               placeholder="Search movies..."
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
+              onPressEnter={() => {
+                if (searchQuery.trim()) {
+                  router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+                }
+              }}
               className={styles.searchInput}
             />
 
