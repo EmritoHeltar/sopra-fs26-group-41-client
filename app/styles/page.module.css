@@ -123,7 +123,6 @@
   padding: 0 !important;
 }
 
-/* --- Users/Me Profile Styling --- */
 
 .page {
   min-height: 100vh;
@@ -141,8 +140,9 @@
 .hero {
   margin-bottom: 18px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: flex-start;
+  gap: 20px;
 }
 
 .brand {
@@ -295,6 +295,20 @@
   .title {
     font-size: 32px !important;
   }
+
+  .hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .heroRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
 }
 
 .statusRow {
@@ -321,4 +335,262 @@
   background: #a52a1f;
   box-shadow: 0 0 0 3px rgba(165, 42, 31, 0.18);
   flex-shrink: 0;
+}
+
+.centerWrapper {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.authCard {
+  width: 50%;
+  max-width: 720px;
+  text-align: center;
+  padding: 32px;
+}
+
+.authActions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.authButton {
+  border-radius: 999px !important;
+  border: none !important;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18);
+}
+
+.authButton:hover {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  color: #fff !important;
+}
+
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.heroRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.searchInput {
+  width: 340px;
+}
+
+.searchInput :global(.ant-input) {
+  background: rgba(255, 250, 244, 0.94) !important;
+  border: 1px solid #e5b8a7 !important;
+  border-radius: 999px !important;
+  color: #3b241d !important;
+  box-shadow: none !important;
+  padding: 8px 16px !important;
+  height: 42px !important;
+}
+
+.searchInput :global(.ant-input::placeholder) {
+  color: #8f6d60 !important;
+}
+
+
+.uploadTriggerButton {
+  margin-top: 16px;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 10px rgba(120, 34, 20, 0.15);
+}
+
+.uploadTriggerButton:hover {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 480px;
+  background: linear-gradient(180deg, rgba(24, 20, 18, 0.98) 0%, rgba(16, 14, 13, 1) 100%);
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid rgba(165, 42, 31, 0.3);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+  margin: 16px;
+}
+
+.modalTitle {
+  color: #fff4eb !important;
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+}
+
+.modalSubtitle {
+  color: #a7887d;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.fileDropZone {
+  border: 2px dashed rgba(165, 42, 31, 0.4);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(255, 244, 235, 0.03);
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.fileDropZone:hover {
+  background: rgba(255, 244, 235, 0.08);
+  border-color: rgba(165, 42, 31, 0.7);
+}
+
+.fileDropZoneActive {
+  background: rgba(165, 42, 31, 0.1);
+  border-color: #a52a1f;
+  border-style: solid;
+}
+
+.dropZonePrompt {
+  color: #e5b8a7;
+  font-weight: 500;
+}
+
+.selectedFileText {
+  color: #fff4eb;
+  font-weight: 600;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.modalCancelButton {
+  background: transparent !important;
+  border: 1px solid rgba(255, 244, 235, 0.3) !important;
+  color: #fff4eb !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+.modalCancelButton:hover {
+  border-color: rgba(255, 244, 235, 0.6) !important;
+}
+
+.modalConfirmButton {
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+.modalConfirmButton:hover:not(:disabled) {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+}
+
+.modalConfirmButton:disabled {
+  background: #3b241d !important;
+  color: #8f6d60 !important;
+  box-shadow: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.instructionBlock {
+  background: rgba(255, 244, 235, 0.05);
+  border: 1px solid rgba(255, 244, 235, 0.1);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+}
+
+.instructionText {
+  color: #fff4eb !important;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.instructionList {
+  margin: 0;
+  padding-left: 20px;
+  color: #e5b8a7;
+  font-size: 14px;
+}
+
+.instructionList li {
+  margin-bottom: 4px;
+}
+
+.instructionList strong {
+  color: #fff4eb;
+}
+
+.externalLink {
+  color: #f0b08d;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(240, 176, 141, 0.4);
+  transition: all 0.2s ease;
+}
+
+.externalLink:hover {
+  color: #fff4eb;
+  border-bottom-color: #fff4eb;
+}
+
+.fileSelectedFeedback {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fileReadyText {
+  color: #2f7a32;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dropZoneEmpty {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dropZoneSecondary {
+  color: #8f6d60;
+  font-size: 12px;
 }

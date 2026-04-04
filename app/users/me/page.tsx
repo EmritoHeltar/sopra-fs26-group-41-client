@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Spin, Typography, Button } from "antd";
+import { Card, Spin, Typography, Button, Input } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import type { MyProfile } from "@/types/user";
+import type { MyProfile, LetterboxdImportResponse } from "@/types/user";
 import styles from "@/styles/page.module.css"
 
 const { Title, Text } = Typography;
@@ -25,10 +25,45 @@ const Profile: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
   const { clear: clearToken } = useLocalStorage<string>("token", "");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [profile, setProfile] = useState<MyProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isHoveringLogout, setIsHoveringLogout] = useState(false);
+
+
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleOpenDialog = () => {
+    setIsUploadDialogOpen(true);
+    setUploadError(null);
+    setSelectedFile(null);
+  };
+
+  const handleCloseDialog = () => {
+    if (isUploading) return;
+    setIsUploadDialogOpen(false);
+    setUploadError(null);
+    setSelectedFile(null);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleConfirmUpload = () => {
+    if (selectedFile) {
+      handleLetterboxdUpload(selectedFile);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -40,10 +75,53 @@ const Profile: React.FC = () => {
     }
   };
 
-  const [isHoveringLogout, setIsHoveringLogout] = useState(false);
+  // to be called by upload dialog (#5)
+  const handleLetterboxdUpload = async (file: File) => {
+    setUploadError(null);
+    setIsUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await apiService.upload<LetterboxdImportResponse>("/import", formData);
+
+      const updatedProfile: MyProfile = {
+        id: response.id,
+        username: response.username,
+        hasLetterboxdData: response.hasLetterboxdData,
+        stats: {
+          moviesLogged: response.stats?.moviesLogged ?? 0,
+          highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0,
+          topGenres: response.stats?.topGenres ?? [],
+        },
+      };
+
+      setProfile(updatedProfile);
+      setError(null);
+      setSelectedFile(null);
+      setIsUploadDialogOpen(false);
+    } catch (err) {
+      if (err instanceof Error) {
+        setUploadError(err.message);
+      } else {
+        setUploadError("Upload failed. Please try again.");
+      }
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        router.replace("/login");
+        return;
+      }
+
       try {
         const response = await apiService.get<Partial<MyProfile>>("/users/me");
 
@@ -59,18 +137,19 @@ const Profile: React.FC = () => {
         };
 
         setProfile(safeProfile);
+        setError(null);
       } catch (err) {
         if (err instanceof Error) {
           const status = (err as { status?: number }).status;
 
-          if (status === 401) {
+          if (status === 400 || status === 401 || status === 403) {
             clearToken();
             router.replace("/login");
             return;
+          } else {
+            setProfile(mockProfile);
+            setError("Showing default data (backend not ready yet)");
           }
-
-          setProfile(mockProfile);
-          setError("Showing default data (backend not ready yet)");
         } else {
           setProfile(mockProfile);
           setError("Using fallback data");
@@ -113,8 +192,8 @@ const Profile: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.content}>
-        <div className={styles.hero} style={{ position: "relative" }}>
-          <div>
+        <div className={styles.hero}>
+          <div className={styles.heroLeft}>
             <Title level={1} className={styles.brand}>
               Movieblendr.
             </Title>
@@ -123,26 +202,31 @@ const Profile: React.FC = () => {
             </Title>
           </div>
 
-          <Button
-            onClick={handleLogout}
-            onMouseEnter={() => setIsHoveringLogout(true)}
-            onMouseLeave={() => setIsHoveringLogout(false)}
-            style={{
-              position: "absolute",
-              top: "0px",
-              right: "0px",
-              borderRadius: "999px",
-              border: "1px solid rgba(255, 244, 235, 0.68)",
-              background: isHoveringLogout ? "#2a2422" : "#1a1615",
-              color: "#fff4eb",
-              fontWeight: 600,
-              transition: "all 0.2s ease",
-            }}
-          >
-            Log out
-          </Button>
-        </div>
+          <div className={styles.heroRight}>
+            <Input
+              placeholder="Search movies..."
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              className={styles.searchInput}
+            />
 
+            <Button
+              onClick={handleLogout}
+              onMouseEnter={() => setIsHoveringLogout(true)}
+              onMouseLeave={() => setIsHoveringLogout(false)}
+              style={{
+                borderRadius: "999px",
+                border: "1px solid rgba(255, 244, 235, 0.68)",
+                background: isHoveringLogout ? "#2a2422" : "#1a1615",
+                color: "#fff4eb",
+                fontWeight: 600,
+                transition: "all 0.2s ease",
+              }}
+            >
+              Log out
+            </Button>
+          </div>
+        </div>
         <Card className={styles.shellCard}>
           {error && (
             <div className={styles.warningBox}>
@@ -179,6 +263,14 @@ const Profile: React.FC = () => {
                   ? "Your Letterboxd data is available and your homepage stats are shown below."
                   : "No Letterboxd data uploaded yet. Your stats are shown with default values for now."}
               </Text>
+
+              <Button 
+                onClick={handleOpenDialog} 
+                className={styles.uploadTriggerButton}
+                type="primary"
+              >
+                {isConnected ? "Update" : "Upload"}
+              </Button>
             </Card>
           </div>
 
@@ -225,6 +317,78 @@ const Profile: React.FC = () => {
           </div>
         </Card>
       </div>
+
+      {isUploadDialogOpen && (
+        <div className={styles.modalOverlay} onClick={handleCloseDialog}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <Title level={3} className={styles.modalTitle}>
+              {isConnected ? "Update Letterboxd Data" : "Upload Letterboxd Data"}
+            </Title>
+            <Text className={styles.modalSubtitle}>
+              {isConnected 
+                ? "Replace your current Movieblendr stats with a fresh Letterboxd export." 
+                : "Import your Letterboxd history to generate your statistics."}
+            </Text>
+
+            <div className={styles.instructionBlock}>
+              <Text className={styles.instructionText}>How to get your data:</Text>
+              <ul className={styles.instructionList}>
+                <li>Go to <a href="https://letterboxd.com/settings/data/" target="_blank" rel="noopener noreferrer" className={styles.externalLink}>Letterboxd Data Settings</a></li>
+                <li>Download your account export (ZIP)</li>
+                <li>Upload the <strong>entire downloaded .zip file</strong> here</li>
+              </ul>
+            </div>
+
+            {uploadError && (
+              <div className={styles.errorAlert} style={{ marginBottom: "20px" }}>
+                <Text type="danger">{uploadError}</Text>
+              </div>
+            )}
+
+            <div 
+              className={`${styles.fileDropZone} ${selectedFile ? styles.fileDropZoneActive : ''}`} 
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input 
+                type="file" 
+                accept=".zip" 
+                ref={fileInputRef} 
+                style={{ display: 'none' }} 
+                onChange={handleFileSelect} 
+              />
+              {selectedFile ? (
+                <div className={styles.fileSelectedFeedback}>
+                  <Text className={styles.selectedFileText}>📦 {selectedFile.name}</Text>
+                  <Text className={styles.fileReadyText}>Ready to upload</Text>
+                </div>
+              ) : (
+                <div className={styles.dropZoneEmpty}>
+                  <Text className={styles.dropZonePrompt}>Click to browse</Text>
+                  <Text className={styles.dropZoneSecondary}>ZIP archive only</Text>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.modalActions}>
+              <Button 
+                onClick={handleCloseDialog} 
+                className={styles.modalCancelButton}
+                disabled={isUploading}
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleConfirmUpload} 
+                className={styles.modalConfirmButton}
+                disabled={!selectedFile || isUploading}
+                loading={isUploading}
+              >
+                {isUploading ? "Uploading..." : "Confirm"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
