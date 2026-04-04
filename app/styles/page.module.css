@@ -403,3 +403,130 @@
 .searchInput :global(.ant-input::placeholder) {
   color: #8f6d60 !important;
 }
+
+/* --- Modal & Upload Dialogue Styling --- */
+
+.uploadTriggerButton {
+  margin-top: 16px;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 10px rgba(120, 34, 20, 0.15);
+}
+
+.uploadTriggerButton:hover {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.modalContent {
+  width: 100%;
+  max-width: 480px;
+  background: linear-gradient(180deg, rgba(24, 20, 18, 0.98) 0%, rgba(16, 14, 13, 1) 100%);
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid rgba(165, 42, 31, 0.3);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+  margin: 16px;
+}
+
+.modalTitle {
+  color: #fff4eb !important;
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+}
+
+.modalSubtitle {
+  color: #a7887d;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.fileDropZone {
+  border: 2px dashed rgba(165, 42, 31, 0.4);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(255, 244, 235, 0.03);
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.fileDropZone:hover {
+  background: rgba(255, 244, 235, 0.08);
+  border-color: rgba(165, 42, 31, 0.7);
+}
+
+.fileDropZoneActive {
+  background: rgba(165, 42, 31, 0.1);
+  border-color: #a52a1f;
+  border-style: solid;
+}
+
+.dropZonePrompt {
+  color: #e5b8a7;
+  font-weight: 500;
+}
+
+.selectedFileText {
+  color: #fff4eb;
+  font-weight: 600;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.modalCancelButton {
+  background: transparent !important;
+  border: 1px solid rgba(255, 244, 235, 0.3) !important;
+  color: #fff4eb !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+.modalCancelButton:hover {
+  border-color: rgba(255, 244, 235, 0.6) !important;
+}
+
+.modalConfirmButton {
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  border: none !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+}
+
+.modalConfirmButton:hover:not(:disabled) {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+}
+
+.modalConfirmButton:disabled {
+  background: #3b241d !important;
+  color: #8f6d60 !important;
+  box-shadow: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
