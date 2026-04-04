@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Spin, Typography, Button, Input } from "antd";
 import { useApi } from "@/hooks/useApi";
@@ -37,6 +37,34 @@ const Profile: React.FC = () => {
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleOpenDialog = () => {
+    setIsUploadDialogOpen(true);
+    setUploadError(null);
+    setSelectedFile(null);
+  };
+
+  const handleCloseDialog = () => {
+    if (isUploading) return;
+    setIsUploadDialogOpen(false);
+    setUploadError(null);
+    setSelectedFile(null);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleConfirmUpload = () => {
+    if (selectedFile) {
+      handleLetterboxdUpload(selectedFile);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await apiService.post("/logout", {});
@@ -72,6 +100,7 @@ const Profile: React.FC = () => {
       setProfile(updatedProfile);
       setError(null);
       setSelectedFile(null);
+      setIsUploadDialogOpen(false);
     } catch (err) {
       if (err instanceof Error) {
         setUploadError(err.message);
@@ -233,6 +262,14 @@ const Profile: React.FC = () => {
                   ? "Your Letterboxd data is available and your homepage stats are shown below."
                   : "No Letterboxd data uploaded yet. Your stats are shown with default values for now."}
               </Text>
+
+              <Button 
+                onClick={handleOpenDialog} 
+                className={styles.uploadTriggerButton}
+                type="primary"
+              >
+                {isConnected ? "Update" : "Upload"}
+              </Button>
             </Card>
           </div>
 
