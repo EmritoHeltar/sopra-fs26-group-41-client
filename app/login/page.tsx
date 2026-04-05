@@ -10,6 +10,7 @@ const { Title } = Typography;
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
+import Image from "next/image";
 
 
 const Login: React.FC = () => {
@@ -50,7 +51,13 @@ const Login: React.FC = () => {
     <div className={styles.loginContainer}>
       <div className={styles.headerSection}>
         <div className={styles.brandRow}>
-          <img src="/logo.png" alt="logo" className={styles.logo} />
+          <Image
+            src="/logo.jpeg"
+            alt="logo"
+            width={52}
+            height={52}
+            className={styles.logo}
+          />
           <Title level={2} className={styles.title}>
             Movieblendr.
           </Title>

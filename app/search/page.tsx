@@ -6,6 +6,7 @@ import { Card, Spin, Typography, Button } from "antd";
 import { useApi } from "@/hooks/useApi";
 import type { MovieSearchDTO, MovieSearchResponse } from "@/types/movie";
 import styles from "@/styles/page.module.css";
+import Image from "next/image";
 
 const { Title, Text } = Typography;
 
@@ -90,11 +91,12 @@ const SearchResultsContent: React.FC = () => {
             >
               <div className={styles.moviePosterWrap}>
                 {movie.posterUrl && movie.posterUrl !== "N/A" ? (
-                  <img
-                    src={movie.posterUrl}
-                    alt={`${movie.title} poster`}
-                    className={styles.moviePoster}
-                    loading="lazy"
+                  <Image
+                    src="/logo.jpeg"
+                    alt="logo"
+                    width={52}
+                    height={52}
+                    className={styles.logo}
                   />
                 ) : (
                   <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8f6d60' }}>

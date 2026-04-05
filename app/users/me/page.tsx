@@ -7,6 +7,7 @@ import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MyProfile, LetterboxdImportResponse } from "@/types/user";
 import styles from "@/styles/page.module.css"
+import Image from "next/image";
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -203,7 +204,13 @@ const Profile: React.FC = () => {
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
             <div className={styles.brandRow}>
-              <img src="/logo.png" alt="logo" className={styles.logo} />
+              <Image
+                src="/logo.png"
+                alt="logo"
+                width={52}
+                height={52}
+                className={styles.logo}
+              />
               <Title level={1} className={styles.brand}>
                 Movieblendr.
               </Title>

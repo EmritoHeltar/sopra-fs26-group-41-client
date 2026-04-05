@@ -8,6 +8,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import Image from "next/image";
 
 const { Title } = Typography;
 
@@ -49,7 +50,13 @@ const Register: React.FC = () => {
     <div className={styles.loginContainer}>
       <div className={styles.headerSection}>
         <div className={styles.brandRow}>
-          <img src="/logo.png" alt="logo" className={styles.logo} />
+          <Image
+            src="/logo.jpeg"
+            alt="logo"
+            width={52}
+            height={52}
+            className={styles.logo}
+          />
           <Title className={styles.title}>Movieblendr.</Title>
         </div>
         <Typography.Text type="secondary">
