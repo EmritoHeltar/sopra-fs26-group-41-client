@@ -51,7 +51,7 @@ const Register: React.FC = () => {
       <div className={styles.headerSection}>
         <div className={styles.brandRow}>
           <Image
-            src="/logo.jpeg"
+            src="/logo.png"
             alt="logo"
             width={52}
             height={52}

@@ -92,7 +92,7 @@ const SearchResultsContent: React.FC = () => {
               <div className={styles.moviePosterWrap}>
                 {movie.posterUrl && movie.posterUrl !== "N/A" ? (
                   <Image
-                    src="/logo.jpeg"
+                    src="/logo.png"
                     alt="logo"
                     width={52}
                     height={52}
