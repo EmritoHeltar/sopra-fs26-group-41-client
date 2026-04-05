@@ -84,7 +84,7 @@ const Profile: React.FC = () => {
     }
   };
 
-  // to be called by upload dialog (#5)
+
   const handleLetterboxdUpload = async (file: File) => {
     setUploadError(null);
     setIsUploading(true);
