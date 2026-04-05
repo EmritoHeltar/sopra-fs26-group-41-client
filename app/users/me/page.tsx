@@ -71,7 +71,7 @@ const Profile: React.FC = () => {
       return;
     }
 
-    router.push(`/results?query=${encodeURIComponent(trimmedQuery)}`);
+    router.push(`/search?query=${encodeURIComponent(trimmedQuery)}`);
   };
 
   const handleLogout = async () => {

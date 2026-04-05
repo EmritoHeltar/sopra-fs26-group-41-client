@@ -25,13 +25,13 @@ const SearchResultsContent: React.FC = () => {
         setIsLoading(false);
         return;
       }
-      
+
       try {
         setIsLoading(true);
         const response = await apiService.get<MovieSearchResponse>(
           `/movies/search?query=${encodeURIComponent(query)}`
         );
-        
+
 
         setMovies(response.results || []);
         setError(null);
@@ -77,22 +77,22 @@ const SearchResultsContent: React.FC = () => {
       )}
 
       {!error && movies.length === 0 && query && (
-         <Text className={styles.helperText}>No movies found matching that title. Try another search.</Text>
+        <Text className={styles.helperText}>No movies found matching that title. Try another search.</Text>
       )}
 
       {!error && movies.length > 0 && (
         <div className={styles.movieGrid}>
           {movies.map((movie, index) => (
-            <Card 
-              key={`${movie.id}-${index}`} 
+            <Card
+              key={`${movie.id}-${index}`}
               className={`${styles.softCard} ${styles.movieCard}`}
               onClick={() => handleMovieClick(movie.id)}
             >
               <div className={styles.moviePosterWrap}>
                 {movie.posterUrl && movie.posterUrl !== "N/A" ? (
-                  <img 
-                    src={movie.posterUrl} 
-                    alt={`${movie.title} poster`} 
+                  <img
+                    src={movie.posterUrl}
+                    alt={`${movie.title} poster`}
                     className={styles.moviePoster}
                     loading="lazy"
                   />
@@ -128,15 +128,8 @@ const SearchResultsPage: React.FC = () => {
             </Title>
           </div>
           <div className={styles.heroRight}>
-            <Button
+            <Button className={styles.authButton}
               onClick={() => router.push("/users/me")}
-              style={{
-                borderRadius: "999px",
-                border: "1px solid rgba(255, 244, 235, 0.68)",
-                background: "#1a1615",
-                color: "#fff4eb",
-                fontWeight: 600,
-              }}
             >
               ← Home
             </Button>
