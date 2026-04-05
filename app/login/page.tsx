@@ -6,6 +6,7 @@ import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { LoginRequest, LoginResponse } from "@/types/user";
 import { Button, Form, Input, Typography, Alert } from "antd";
+const { Title } = Typography;
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
@@ -48,9 +49,12 @@ const Login: React.FC = () => {
   return (
     <div className={styles.loginContainer}>
       <div className={styles.headerSection}>
-        <Typography.Title level={2} className={styles.title}>
-          Movieblendr.
-        </Typography.Title>
+        <div className={styles.brandRow}>
+          <img src="/logo.png" alt="logo" className={styles.logo} />
+          <Title level={2} className={styles.title}>
+            Movieblendr.
+          </Title>
+        </div>
         <Typography.Text type="secondary">
           Welcome back! Login to continue
         </Typography.Text>
