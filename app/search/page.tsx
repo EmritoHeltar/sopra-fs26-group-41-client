@@ -1,0 +1,153 @@
+"use client";
+
+import React, { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Card, Spin, Typography, Button } from "antd";
+import { useApi } from "@/hooks/useApi";
+import type { MovieSearchDTO, MovieSearchResponse } from "@/types/movie";
+import styles from "@/styles/page.module.css";
+
+const { Title, Text } = Typography;
+
+const SearchResultsContent: React.FC = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query");
+  const apiService = useApi();
+
+  const [movies, setMovies] = useState<MovieSearchDTO[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (!query) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const response = await apiService.get<MovieSearchResponse>(
+          `/movies/search?query=${encodeURIComponent(query)}`
+        );
+
+
+        setMovies(response.results || []);
+        setError(null);
+      } catch (err) {
+        setMovies([]);
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unexpected error occurred while searching.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchResults();
+  }, [query, apiService]);
+
+  const handleMovieClick = (id: string) => {
+    router.push(`/movies/${id}`);
+  };
+
+  if (isLoading) {
+    return (
+      <div className={styles.loadingWrap} style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <Title level={4} style={{ color: "#fff4eb", marginBottom: "16px", marginTop: "0" }}>
+        Showing results for <span style={{ color: "#a52a1f" }}>&quot;{query}&quot;</span>
+      </Title>
+
+      {error && (
+        <div className={styles.warningBox} style={{ marginBottom: "20px" }}>
+          <Text className={styles.warningLabel}>Search Error</Text>
+          <br />
+          <Text className={styles.warningText}>{error}</Text>
+        </div>
+      )}
+
+      {!error && movies.length === 0 && query && (
+        <Text className={styles.helperText}>No movies found matching that title. Try another search.</Text>
+      )}
+
+      {!error && movies.length > 0 && (
+        <div className={styles.movieGrid}>
+          {movies.map((movie, index) => (
+            <Card
+              key={`${movie.id}-${index}`}
+              className={`${styles.softCard} ${styles.movieCard}`}
+              onClick={() => handleMovieClick(movie.id)}
+            >
+              <div className={styles.moviePosterWrap}>
+                {movie.posterUrl && movie.posterUrl !== "N/A" ? (
+                  <img
+                    src={movie.posterUrl}
+                    alt={`${movie.title} poster`}
+                    className={styles.moviePoster}
+                    loading="lazy"
+                  />
+                ) : (
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8f6d60' }}>
+                    No Poster
+                  </div>
+                )}
+              </div>
+              <h3 className={styles.movieResultTitle}>{movie.title}</h3>
+              <div className={styles.movieResultYear}>{movie.year}</div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </>
+  );
+};
+
+const SearchResultsPage: React.FC = () => {
+  const router = useRouter();
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.content}>
+        <div className={styles.hero}>
+          <div className={styles.heroLeft}>
+            <Title level={1} className={styles.brand}>
+              Movieblendr.
+            </Title>
+            <Title level={3} className={styles.subtitle}>
+              Search Results
+            </Title>
+          </div>
+          <div className={styles.heroRight}>
+            <Button className={styles.authButton}
+              onClick={() => router.push("/users/me")}
+            >
+              ← Home
+            </Button>
+          </div>
+        </div>
+
+        <Card className={styles.shellCard}>
+          <Suspense fallback={
+            <div className={styles.loadingWrap} style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>
+              <Spin size="large" />
+            </div>
+          }>
+            <SearchResultsContent />
+          </Suspense>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default SearchResultsPage;
