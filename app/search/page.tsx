@@ -91,12 +91,10 @@ const SearchResultsContent: React.FC = () => {
             >
               <div className={styles.moviePosterWrap}>
                 {movie.posterUrl && movie.posterUrl !== "N/A" ? (
-                  <Image
-                    src="/logo.png"
-                    alt="logo"
-                    width={52}
-                    height={52}
-                    className={styles.logo}
+                  <img
+                    src={movie.posterUrl}
+                    alt={`${movie.title} poster`}
+                    className={styles.moviePoster}
                   />
                 ) : (
                   <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8f6d60' }}>
@@ -123,7 +121,13 @@ const SearchResultsPage: React.FC = () => {
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
             <div className={styles.brandRow}>
-              <img src="/logo.png" alt="logo" className={styles.logo} />
+              <Image
+                src="/logo.png"
+                alt="logo"
+                width={52}
+                height={52}
+                className={styles.logo}
+              />
               <Title level={1} className={styles.brand}>
                 Movieblendr.
               </Title>
