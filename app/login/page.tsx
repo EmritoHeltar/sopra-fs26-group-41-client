@@ -10,10 +10,6 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
 
-interface FormFieldProps {
-  label: string;
-  value: string;
-}
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -115,7 +111,7 @@ const Login: React.FC = () => {
         </Form>
         <div className={styles.registerTextContainer}>
           <Typography.Text>
-            Don't have an account? <Link href="/register" className={styles.registerLink}>Register</Link>
+            Don&apos;t have an account? <Link href="/register" className={styles.registerLink}>Register</Link>
           </Typography.Text>
         </div>
       </div>

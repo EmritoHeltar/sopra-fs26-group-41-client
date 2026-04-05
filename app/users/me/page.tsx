@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Spin, Typography, Button, Input } from "antd";
 import { useApi } from "@/hooks/useApi";
@@ -9,6 +9,7 @@ import type { MyProfile, LetterboxdImportResponse } from "@/types/user";
 import styles from "@/styles/page.module.css"
 
 const { Title, Text } = Typography;
+const { Search } = Input;
 
 const mockProfile: MyProfile = {
   id: 0,
@@ -30,12 +31,48 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<MyProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isHoveringLogout, setIsHoveringLogout] = useState(false);
-
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleOpenDialog = () => {
+    setIsUploadDialogOpen(true);
+    setUploadError(null);
+    setSelectedFile(null);
+  };
+
+  const handleCloseDialog = () => {
+    if (isUploading) return;
+    setIsUploadDialogOpen(false);
+    setUploadError(null);
+    setSelectedFile(null);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleConfirmUpload = () => {
+    if (selectedFile) {
+      handleLetterboxdUpload(selectedFile);
+    }
+  };
+
+  const handleSearch = () => {
+    const trimmedQuery = searchQuery.trim();
+
+    if (!trimmedQuery) {
+      return;
+    }
+
+    router.push(`/results?query=${encodeURIComponent(trimmedQuery)}`);
+  };
 
   const handleLogout = async () => {
     try {
@@ -72,6 +109,7 @@ const Profile: React.FC = () => {
       setProfile(updatedProfile);
       setError(null);
       setSelectedFile(null);
+      setIsUploadDialogOpen(false);
     } catch (err) {
       if (err instanceof Error) {
         setUploadError(err.message);
@@ -131,7 +169,7 @@ const Profile: React.FC = () => {
     };
 
     fetchProfile();
-  }, []);
+  }, [apiService, clearToken, router]);
 
   if (isLoading) {
     return (
@@ -173,31 +211,16 @@ const Profile: React.FC = () => {
           </div>
 
           <div className={styles.heroRight}>
-            <Input
+            <Search
+              className={styles.searchInput}
               placeholder="Search movies..."
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              onPressEnter={() => {
-                if (searchQuery.trim()) {
-                  router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
-                }
-              }}
-              className={styles.searchInput}
+              onSearch={handleSearch}
+              enterButton
             />
 
-            <Button
-              onClick={handleLogout}
-              onMouseEnter={() => setIsHoveringLogout(true)}
-              onMouseLeave={() => setIsHoveringLogout(false)}
-              style={{
-                borderRadius: "999px",
-                border: "1px solid rgba(255, 244, 235, 0.68)",
-                background: isHoveringLogout ? "#2a2422" : "#1a1615",
-                color: "#fff4eb",
-                fontWeight: 600,
-                transition: "all 0.2s ease",
-              }}
-            >
+            <Button className={styles.authButton} onClick={handleLogout}>
               Log out
             </Button>
           </div>
@@ -238,6 +261,14 @@ const Profile: React.FC = () => {
                   ? "Your Letterboxd data is available and your homepage stats are shown below."
                   : "No Letterboxd data uploaded yet. Your stats are shown with default values for now."}
               </Text>
+
+              <Button
+                onClick={handleOpenDialog}
+                className={styles.uploadTriggerButton}
+                type="primary"
+              >
+                {isConnected ? "Update" : "Upload"}
+              </Button>
             </Card>
           </div>
 
@@ -284,6 +315,78 @@ const Profile: React.FC = () => {
           </div>
         </Card>
       </div>
+
+      {isUploadDialogOpen && (
+        <div className={styles.modalOverlay} onClick={handleCloseDialog}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <Title level={3} className={styles.modalTitle}>
+              {isConnected ? "Update Letterboxd Data" : "Upload Letterboxd Data"}
+            </Title>
+            <Text className={styles.modalSubtitle}>
+              {isConnected
+                ? "Replace your current Movieblendr stats with a fresh Letterboxd export."
+                : "Import your Letterboxd history to generate your statistics."}
+            </Text>
+
+            <div className={styles.instructionBlock}>
+              <Text className={styles.instructionText}>How to get your data:</Text>
+              <ul className={styles.instructionList}>
+                <li>Go to <a href="https://letterboxd.com/settings/data/" target="_blank" rel="noopener noreferrer" className={styles.externalLink}>Letterboxd Data Settings</a></li>
+                <li>Download your account export (ZIP)</li>
+                <li>Upload the <strong>entire downloaded .zip file</strong> here</li>
+              </ul>
+            </div>
+
+            {uploadError && (
+              <div className={styles.errorAlert} style={{ marginBottom: "20px" }}>
+                <Text type="danger">{uploadError}</Text>
+              </div>
+            )}
+
+            <div
+              className={`${styles.fileDropZone} ${selectedFile ? styles.fileDropZoneActive : ''}`}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input
+                type="file"
+                accept=".zip"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleFileSelect}
+              />
+              {selectedFile ? (
+                <div className={styles.fileSelectedFeedback}>
+                  <Text className={styles.selectedFileText}>📦 {selectedFile.name}</Text>
+                  <Text className={styles.fileReadyText}>Ready to upload</Text>
+                </div>
+              ) : (
+                <div className={styles.dropZoneEmpty}>
+                  <Text className={styles.dropZonePrompt}>Click to browse</Text>
+                  <Text className={styles.dropZoneSecondary}>ZIP archive only</Text>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.modalActions}>
+              <Button
+                onClick={handleCloseDialog}
+                className={styles.modalCancelButton}
+                disabled={isUploading}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleConfirmUpload}
+                className={styles.modalConfirmButton}
+                disabled={!selectedFile || isUploading}
+                loading={isUploading}
+              >
+                {isUploading ? "Uploading..." : "Confirm"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
