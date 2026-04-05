@@ -9,6 +9,8 @@ import Link from "next/link";
 import styles from "../styles/page.module.css";
 import useLocalStorage from "@/hooks/useLocalStorage";
 
+const { Title } = Typography;
+
 const Register: React.FC = () => {
   const router = useRouter();
   const apiService = useApi();
@@ -46,9 +48,10 @@ const Register: React.FC = () => {
   return (
     <div className={styles.loginContainer}>
       <div className={styles.headerSection}>
-        <Typography.Title level={2} className={styles.title}>
-          Movieblendr.
-        </Typography.Title>
+        <div className={styles.brandRow}>
+          <img src="/logo.png" alt="logo" className={styles.logo} />
+          <Title className={styles.title}>Movieblendr.</Title>
+        </div>
         <Typography.Text type="secondary">
           Create your account to start blending
         </Typography.Text>
@@ -113,7 +116,7 @@ const Register: React.FC = () => {
           </Typography.Text>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

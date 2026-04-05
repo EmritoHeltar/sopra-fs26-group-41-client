@@ -120,9 +120,12 @@ const SearchResultsPage: React.FC = () => {
       <div className={styles.content}>
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
-            <Title level={1} className={styles.brand}>
-              Movieblendr.
-            </Title>
+            <div className={styles.brandRow}>
+              <img src="/logo.png" alt="logo" className={styles.logo} />
+              <Title level={1} className={styles.brand}>
+                Movieblendr.
+              </Title>
+            </div>
             <Title level={3} className={styles.subtitle}>
               Search Results
             </Title>
