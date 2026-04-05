@@ -44,7 +44,6 @@ reason).
 | **BB8006** | [28.03.2026]   | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/2cd66be4805bc297781ce54e9aabb9bf4e665142] , [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/26079d45eb9ec590f51c5da68da96592e321027f] | implemented register page UI/API logic and extracted styles from css module (#2) | Built the Register page (Issue #2) so users can actually create accounts, extracted our styling into a clean CSS module to avoid duplicate code, and fixed an Ant Design warning that was breaking the dev screen. |
 | **EmritoHeltar** | [28.3.2026]   | [(https://github.com/fabianbaechli/sopra-fs26-group-41-server/commit/78f6b1057ac4a85e14cf7386d89d839fc33ff3d2)] | Implemented the Users/me endpoint | This allows the frontend to start populating the profilepage of the user |
 | **EmritoHeltar** | [28.3.2026]   | [(https://github.com/fabianbaechli/sopra-fs26-group-41-server/commit/b11825abb281e1fc86e3287832bc33622238af4c)] | I advanced the TasteProfile class | This is vital to then start coding the recommendation algorithm. I also added the capability to merge multiple tasteprofiles so groups can have a tasteprofile. Reagarding the commit message after communicating the class is good as it is now |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 
 ---
 
@@ -61,29 +60,64 @@ reason).
 | **@fabianbaechli** | 03.04.2026   | [https://github.com/fabianbaechli/sopra-fs26-group-41-server/commit/8a09f33733d7ece020602bfff9c083600c8d88c0] | Implemented `#31` (Serve movie details) | Allows querying all relevant details about a movie. Used when clicking on a search result and later on when polling. |
 | **[@BB8006]** | 04.04.2026   | [(https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/6ae3eafaeda66835d68887665987bede44068754)]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/6ba37612c4fd1b635ab6bd8cfd9c78d64dc20c9b]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/190a46d1229990e1891f33a123493fb684898b29]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/f1d04b689b333bde4090f651761b378221e05d0f]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/d54e1000ac067a49255f3272edd0c26a5221a04b] | Letterboxd ZIP import modal, backend upload logic and error handling (#5) | This contribution implements the client-side interface for the Letterboxd ZIP import. It lets users find and submit their exported data to the backend, which is a structural requirement to generate the taste profiles and statistics later on. |
 |                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-|                    | [date]   | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 
 ---
 
-## Contributions Week 3 - [Begin Date] to [End Date]
+## Contributions Week 3 - [06.04.2026] to [12.04.2026]
 
-_Continue with the same table format as above._
-
----
-
-## Contributions Week 4 - [Begin Date] to [End Date]
-
-_Continue with the same table format as above._
-
----
-
-## Contributions Week 5 - [Begin Date] to [End Date]
-
-_Continue with the same table format as above._
+| **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
+| ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
+| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 
 ---
 
-## Contributions Week 6 - [Begin Date] to [End Date]
+## Contributions Week 4 - [13.04.2026] to [19.04.2026]
 
-_Continue with the same table format as above._
+| **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
+| ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
+| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+
+---
+
+## Contributions Week 5 - [20.04.2026] to [26.04.2026]
+
+| **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
+| ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
+| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+
+---
+
+## Contributions Week 6 - [27.04.2026] to [03.05.2026]
+
+| **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
+| ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
+| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+
