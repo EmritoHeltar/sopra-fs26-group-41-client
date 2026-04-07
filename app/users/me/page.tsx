@@ -268,7 +268,7 @@ const Profile: React.FC = () => {
               </div>
               <Text className={styles.helperText} style={{ marginTop: "8px", display: "block" }}>
                 {isConnected
-                  ? "Your Letterboxd data is available and your homepage stats are shown below."
+                  ? "Your Letterboxd data is available and your stats are shown below."
                   : "No Letterboxd data uploaded yet. Your stats are shown with default values for now."}
               </Text>
 
