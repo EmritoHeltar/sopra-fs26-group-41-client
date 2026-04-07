@@ -161,6 +161,124 @@ const MoviePage: React.FC = () => {
   const hasPoster =
     movie.posterUrl && movie.posterUrl !== "N/A" && movie.posterUrl.trim() !== "";
 
+  return (
+    <div className={styles.page}>
+      <div className={styles.content}>
+        <div className={styles.hero}>
+          <div className={styles.heroLeft}>
+            <div className={styles.brandRow}>
+              <img src="/logo.png" alt="logo" className={styles.logo} />
+              <Title level={1} className={styles.brand}>
+                Movieblendr.
+              </Title>
+            </div>
+            <Title level={3} className={styles.subtitle}>
+              Movie Details
+            </Title>
+          </div>
+
+          <div className={styles.heroRight}>
+            <Input.Search
+              className={styles.searchInput}
+              placeholder="Search movies..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onSearch={handleSearch}
+              enterButton
+            />
+            <Button className={styles.authButton} onClick={() => router.back()}>
+              Back
+            </Button>
+            <Button className={styles.authButton} onClick={handleLogout}>
+              Logout
+            </Button>
+          </div>
+        </div>
+
+        <Card className={styles.shellCard}>
+          <div className={styles.movieLayout}>
+            <div>
+              {hasPoster ? (
+                <img
+                  src={movie.posterUrl}
+                  alt={`${movie.title} poster`}
+                  className={styles.moviePoster}
+                />
+              ) : (
+                <div className={styles.posterFallback}>No poster available</div>
+              )}
+            </div>
+
+            <div>
+              <div className={styles.label}>Title</div>
+              <Title level={2} className={styles.movieTitle}>
+                {movie.title}
+              </Title>
+
+              <div className={styles.movieInfoGrid}>
+                <Card className={styles.softCard}>
+                  <div className={styles.label}>Year</div>
+                  <div className={styles.statValue}>{movie.year ?? "-"}</div>
+                </Card>
+
+                <Card className={styles.softCard}>
+                  <div className={styles.label}>IMDb Rating</div>
+                  <div className={styles.statValue}>{movie.imdbRating || "-"}</div>
+                </Card>
+
+                <Card className={styles.softCard}>
+                  <div className={styles.label}>Runtime</div>
+                  <div className={styles.runtimeValue}>{movie.runtime || "-"}</div>
+                </Card>
+
+                <Card className={styles.softCard}>
+                  <div className={styles.label}>Director</div>
+                  <Text className={styles.directorText}>{movie.director || "-"}</Text>
+                </Card>
+              </div>
+
+              {typeof movie.tasteOverlap === "number" && (
+                <div className={styles.section}>
+                  <div className={styles.tasteMatchBanner}>
+                    <UserOutlined style={{ fontSize: 16, color: "#86fd80" }} />
+                    <span className={styles.tasteMatchValue}>{movie.tasteOverlap}% Match</span>
+                    <span className={styles.tasteMatchText}>with your Letterboxd taste profile</span>
+                  </div>
+                </div>
+              )}
+
+              <div className={styles.section}>
+                <Title level={3} className={styles.sectionTitle}>
+                  Genres
+                </Title>
+
+                {genreList.length > 0 ? (
+                  <div className={styles.genreWrap}>
+                    {genreList.map((genre) => (
+                      <span key={genre} className={styles.genrePill}>
+                        {genre}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <Text className={styles.helperText}>No genres available.</Text>
+                )}
+              </div>
+
+              <div className={styles.section}>
+                <Title level={3} className={styles.sectionTitle}>
+                  Description
+                </Title>
+                <Paragraph className={styles.descriptionText}>
+                  {movie.description || "No description available."}
+                </Paragraph>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
 };
 
 export default MoviePage;

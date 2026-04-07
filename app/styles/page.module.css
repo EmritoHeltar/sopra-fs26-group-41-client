@@ -212,7 +212,7 @@
 
 .brand {
   margin-bottom: 2px !important;
-  color: #ff5a45 !important;
+  color: #e24531 !important;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   font-size: 44px !important;
   line-height: 1.05 !important;
@@ -222,7 +222,7 @@
 .subtitle {
   margin-top: 10px !important;
   margin-bottom: -4px !important;
-  color: #ff6a55 !important;
+  color: #e94f3b !important;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   font-weight: 500 !important;
   text-align: left;
@@ -284,7 +284,7 @@
 .statValue {
   font-size: 36px;
   font-weight: 700;
-  color: #d85a4a;
+  color: #c84434;
   line-height: 1.1;
 }
 
@@ -774,4 +774,86 @@
   height: 52px;
   object-fit: contain;
   flex-shrink: 0;
+}
+
+.movieLayout {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.moviePoster {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 244, 235, 0.68);
+  display: block;
+}
+
+.posterFallback {
+  width: 100%;
+  min-height: 360px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 244, 235, 0.68);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff4eb;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 16px;
+  text-align: center;
+}
+
+.movieTitle {
+  color: #fff4eb !important;
+  margin-top: 0 !important;
+}
+
+.movieInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.runtimeValue {
+  font-size: 36px;
+  font-weight: 700;
+  color: #c84434;
+  line-height: 1.1;
+}
+
+.tasteMatchBanner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(220, 89, 66, 0.2);
+  background: linear-gradient(180deg, rgba(30, 25, 22, 0.96) 0%, rgba(31, 27, 25, 0.98) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.tasteMatchValue {
+  color: #86fd80;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tasteMatchText {
+  color: #fbe5e5;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.directorText {
+  color: #fff4eb !important;
+  font-size: 16px;
+}
+
+.descriptionText {
+  color: #fff4eb !important;
+  margin-bottom: 0 !important;
 }
