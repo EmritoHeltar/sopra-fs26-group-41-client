@@ -205,6 +205,9 @@ const Profile: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.content}>
+        <Button className={styles.createGroupFab} onClick={handleOpenCreateGroup}>
+          +
+        </Button>
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
             <div className={styles.brandRow}>
@@ -235,9 +238,6 @@ const Profile: React.FC = () => {
             />
             <Button className={styles.authButton} onClick={handleLogout}>
               Log out
-            </Button>
-            <Button className={styles.CreateGroupFab} onClick={handleOpenCreateGroup}>
-              +
             </Button>
           </div>
         </div>
