@@ -391,6 +391,16 @@
     width: 100%;
   }
 
+  .createGroupCard {
+    max-width: 100%;
+    margin-top: 24px;
+  }
+
+  .createGroupSubmit {
+    width: 100%;
+    min-width: 0;
+  }
+
   .page::before {
     opacity: 0.9;
     background:
@@ -856,4 +866,99 @@
 .descriptionText {
   color: #fff4eb !important;
   margin-bottom: 0 !important;
+}
+
+.createGroupCard {
+  width: 100% !important;
+  max-width: 620px !important;
+  margin-top: 32px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.createGroupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.createGroupInput {
+  width: 100%;
+}
+
+.createGroupInput :global(.ant-input) {
+  background: rgba(255, 250, 244, 0.94) !important;
+  border: 1px solid #e5b8a7 !important;
+  border-radius: 12px !important;
+  color: #3b241d !important;
+  box-shadow: none !important;
+  padding: 10px 14px !important;
+  height: 46px !important;
+}
+
+.createGroupInput :global(.ant-input::placeholder) {
+  color: #8f6d60 !important;
+}
+
+.createGroupError {
+  color: #ffb4a8 !important;
+}
+
+.createGroupSubmitWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.createGroupSubmit {
+  min-width: 220px;
+  border-radius: 999px !important;
+  border: none !important;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18);
+  height: 42px !important;
+}
+
+.createGroupSubmit:hover {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  color: #fff !important;
+}
+
+.createGroupFab {
+  position: fixed !important;
+  bottom: 32px !important;
+  right: 32px !important;
+  top: auto !important;
+  left: auto !important;
+  margin: 0 !important;
+  width: 60px !important;
+  min-width: 60px !important;
+  height: 60px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 36px !important;
+  font-weight: 400 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 0.85 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  z-index: 1000 !important;
+}
+
+.createGroupFab :global(span) {
+  display: inline-block;
+  transform: translateY(-3px);
+  /* needed to move "+" up since it's not centered in ascii*/
+}
+
+.createGroupFab:hover {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  color: #fff !important;
 }
