@@ -857,3 +857,25 @@
   color: #fff4eb !important;
   margin-bottom: 0 !important;
 }
+
+.createGroupFab {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255, 244, 235, 0.28) !important;
+  background: linear-gradient(90deg, #e24531 0%, #c84434 100%) !important;
+  color: #fff4eb !important;
+  font-size: 28px !important;
+  font-weight: 500 !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18);
+}
+
+.createGroupFab:hover {
+  background: linear-gradient(90deg, #ef5a45 0%, #d85a4a 100%) !important;
+  color: #fff4eb !important;
+}

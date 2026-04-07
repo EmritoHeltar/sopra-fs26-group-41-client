@@ -122,6 +122,10 @@ const Profile: React.FC = () => {
     }
   };
 
+  const handleOpenCreateGroup = () => {
+    router.push("/create");
+  };
+
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -229,9 +233,11 @@ const Profile: React.FC = () => {
               onSearch={handleSearch}
               enterButton
             />
-
             <Button className={styles.authButton} onClick={handleLogout}>
               Log out
+            </Button>
+            <Button className={styles.CreateGroupFab} onClick={handleOpenCreateGroup}>
+              +
             </Button>
           </div>
         </div>
@@ -324,7 +330,7 @@ const Profile: React.FC = () => {
             )}
           </div>
         </Card>
-      </div>
+      </div >
 
       {isUploadDialogOpen && (
         <div className={styles.modalOverlay} onClick={handleCloseDialog}>
@@ -397,7 +403,7 @@ const Profile: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </div >
   );
 };
 
