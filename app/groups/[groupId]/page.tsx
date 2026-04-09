@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { ApiService } from "@/api/apiService";
 import { GroupDetails } from "@/types/group";
 import styles from "@/styles/page.module.css";
 
@@ -17,6 +18,29 @@ export default function GroupOverview() {
     if (!groupId) return;
 
     let isMounted = true;
+    
+    const fetchGroupDetails = async () => {
+      try {
+        setLoading(true);
+        const api = new ApiService();
+        const data = await api.get<GroupDetails>(`/groups/${groupId}`);
+        
+        if (isMounted) {
+          setGroup(data);
+          setError(null);
+        }
+      } catch (err: any) {
+        if (isMounted) {
+          setError(err.message || "Failed to load group details.");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchGroupDetails();
     
     return () => {
       isMounted = false;
