@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "antd";
 import { ApiService } from "@/api/apiService";
 import { GroupDetails } from "@/types/group";
 import styles from "@/styles/page.module.css";
 
 export default function GroupOverview() {
   const params = useParams();
+  const router = useRouter();
   const groupId = params.groupId as string;
 
   const [group, setGroup] = useState<GroupDetails | null>(null);
@@ -89,10 +92,21 @@ export default function GroupOverview() {
         {/* Dynamic Header */}
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
-            <h1 className={styles.brand}>{group.name}</h1>
-            <p className={styles.subtitle}>
+            <Link href="/users/me" style={{ textDecoration: 'none' }}>
+              <div className={styles.brandRow}>
+                <img src="/logo.png" alt="logo" className={styles.logo} style={{ width: '52px', height: '52px' }} />
+                <h1 className={styles.brand} style={{ margin: 0 }}>Movieblendr.</h1>
+              </div>
+            </Link>
+            <h2 className={styles.subtitle} style={{ marginTop: '12px' }}>{group.name}</h2>
+            <p style={{ color: '#e5b8a7', marginTop: '4px', fontSize: '16px' }}>
               {group.members.length} Member{group.members.length !== 1 ? "s" : ""}
             </p>
+          </div>
+          <div className={styles.heroRight}>
+            <Button className={styles.authButton} onClick={() => router.back()}>
+              Back
+            </Button>
           </div>
         </div>
 
@@ -116,13 +130,13 @@ export default function GroupOverview() {
                   fontSize: '14px'
                 }}
               />
-              <button
+              <Button
                 onClick={handleCopyLink}
                 className={styles.authButton}
                 style={{ padding: '12px 24px', cursor: 'pointer', height: 'auto' }}
               >
                 {copied ? "Copied!" : "Copy URL"}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button, Card, Input, Spin, Typography } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useApi } from "@/hooks/useApi";
@@ -109,12 +110,14 @@ const MoviePage: React.FC = () => {
         <div className={styles.content}>
           <div className={styles.hero}>
             <div className={styles.heroLeft}>
-              <div className={styles.brandRow}>
-                <img src="/logo.png" alt="logo" className={styles.logo} />
-                <Title level={1} className={styles.brand}>
-                  Movieblendr.
-                </Title>
-              </div>
+              <Link href="/users/me" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className={styles.brandRow}>
+                  <img src="/logo.png" alt="logo" className={styles.logo} />
+                  <Title level={1} className={styles.brand}>
+                    Movieblendr.
+                  </Title>
+                </div>
+              </Link>
               <Title level={3} className={styles.subtitle}>
                 Movie Details
               </Title>
@@ -166,12 +169,14 @@ const MoviePage: React.FC = () => {
       <div className={styles.content}>
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
-            <div className={styles.brandRow}>
-              <img src="/logo.png" alt="logo" className={styles.logo} />
-              <Title level={1} className={styles.brand}>
-                Movieblendr.
-              </Title>
-            </div>
+            <Link href="/users/me" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className={styles.brandRow}>
+                <img src="/logo.png" alt="logo" className={styles.logo} />
+                <Title level={1} className={styles.brand}>
+                  Movieblendr.
+                </Title>
+              </div>
+            </Link>
             <Title level={3} className={styles.subtitle}>
               Movie Details
             </Title>
