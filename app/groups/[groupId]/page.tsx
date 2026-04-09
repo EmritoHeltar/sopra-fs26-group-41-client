@@ -48,9 +48,13 @@ export default function GroupOverview() {
     };
   }, [groupId]);
 
+  const fullJoinUrl = typeof window !== 'undefined' && group?.joinUrl?.startsWith('/') 
+    ? `${window.location.origin}${group.joinUrl}` 
+    : group?.joinUrl || '';
+
   const handleCopyLink = () => {
-    if (group?.joinUrl) {
-      navigator.clipboard.writeText(group.joinUrl);
+    if (fullJoinUrl) {
+      navigator.clipboard.writeText(fullJoinUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -99,7 +103,7 @@ export default function GroupOverview() {
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
               <input
                 type="text"
-                value={group.joinUrl}
+                value={fullJoinUrl}
                 readOnly
                 style={{ 
                   flex: 1, 
