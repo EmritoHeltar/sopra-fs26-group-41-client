@@ -1,16 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { GroupDetails } from "@/types/group";
 import styles from "@/styles/page.module.css";
 
 export default function GroupOverview() {
   const params = useParams();
   const groupId = params.groupId as string;
 
-  // Placeholder states for Task 2
+  const [group, setGroup] = useState<GroupDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!groupId) return;
+
+    let isMounted = true;
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [groupId]);
 
   if (loading) {
     return (
