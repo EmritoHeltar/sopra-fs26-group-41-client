@@ -22,20 +22,24 @@ export default function GroupOverview() {
     if (!groupId) return;
 
     let isMounted = true;
-    
+
     const fetchGroupDetails = async () => {
       try {
         setLoading(true);
         const api = new ApiService();
         const data = await api.get<GroupDetails>(`/groups/${groupId}`);
-        
+
         if (isMounted) {
           setGroup(data);
           setError(null);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (isMounted) {
-          setError(err.message || "Failed to load group details.");
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Failed to load group details.");
+          }
         }
       } finally {
         if (isMounted) {
@@ -45,14 +49,14 @@ export default function GroupOverview() {
     };
 
     fetchGroupDetails();
-    
+
     return () => {
       isMounted = false;
     };
   }, [groupId]);
 
-  const fullJoinUrl = typeof window !== 'undefined' && group?.joinUrl?.startsWith('/') 
-    ? `${window.location.origin}${group.joinUrl}` 
+  const fullJoinUrl = typeof window !== 'undefined' && group?.joinUrl?.startsWith('/')
+    ? `${window.location.origin}${group.joinUrl}`
     : group?.joinUrl || '';
 
   const handleCopyLink = () => {
@@ -119,13 +123,13 @@ export default function GroupOverview() {
                 type="text"
                 value={fullJoinUrl}
                 readOnly
-                style={{ 
-                  flex: 1, 
+                style={{
+                  flex: 1,
                   minWidth: '200px',
-                  padding: '12px 16px', 
-                  borderRadius: '12px', 
-                  background: 'rgba(21, 18, 17, 0.94)', 
-                  border: '1px solid rgba(255, 244, 235, 0.3)', 
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  background: 'rgba(21, 18, 17, 0.94)',
+                  border: '1px solid rgba(255, 244, 235, 0.3)',
                   color: '#fff4eb',
                   fontSize: '14px'
                 }}
@@ -143,7 +147,7 @@ export default function GroupOverview() {
         {/* Member Directory */}
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Members</h2>
-          
+
           {group.members.length === 0 ? (
             <p className={styles.helperText}>No members found.</p>
           ) : (
