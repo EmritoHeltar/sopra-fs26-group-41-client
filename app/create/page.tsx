@@ -2,10 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button, Card, Input, Typography } from "antd";
-import { TeamOutlined } from "@ant-design/icons";
+import { TeamOutlined, CopyOutlined, CheckOutlined } from "@ant-design/icons";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import { GroupDetails } from "@/types/group";
 import styles from "@/styles/page.module.css";
 
 const { Title, Text } = Typography;
@@ -18,6 +20,10 @@ const CreateGroup: React.FC = () => {
   const [groupName, setGroupName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Success Confirmation State
+  const [createdGroup, setCreatedGroup] = useState<GroupDetails | null>(null);
+  const [copied, setCopied] = useState<boolean>(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -43,11 +49,12 @@ const CreateGroup: React.FC = () => {
     setError(null);
 
     try {
-      const response = await apiService.post<{ id: number; name: string }>("/groups", {
+      const response = await apiService.post<GroupDetails>("/groups", {
         name: trimmedName,
       });
 
-      router.push(`/groups/${response.id}`);
+      // Capture resulting object into state to present confirmation screen
+      setCreatedGroup(response);
     } catch (err) {
       if (err instanceof Error) {
         const status = (err as { status?: number }).status;
@@ -67,17 +74,32 @@ const CreateGroup: React.FC = () => {
     }
   };
 
+  // Build full origin link for copying
+  const fullJoinUrl = typeof window !== 'undefined' && createdGroup?.joinUrl?.startsWith('/') 
+    ? `${window.location.origin}${createdGroup.joinUrl}` 
+    : createdGroup?.joinUrl || '';
+
+  const handleCopyLink = () => {
+    if (fullJoinUrl) {
+      navigator.clipboard.writeText(fullJoinUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.content}>
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
-            <div className={styles.brandRow}>
-              <img src="/logo.png" alt="logo" className={styles.logo} />
-              <Title level={1} className={styles.brand}>
-                Movieblendr.
-              </Title>
-            </div>
+            <Link href="/users/me" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className={styles.brandRow}>
+                <img src="/logo.png" alt="logo" className={styles.logo} />
+                <Title level={1} className={styles.brand}>
+                  Movieblendr.
+                </Title>
+              </div>
+            </Link>
             <div style={{ marginTop: "70px", marginLeft: "285px", marginBottom: "-17px" }} >
               <Title
                 level={3}
@@ -98,34 +120,73 @@ const CreateGroup: React.FC = () => {
             </Button>
           </div>
         </div>
+
         <div>
-          <Card className={`${styles.shellCard} ${styles.createGroupCard}`}>
-            <div className={styles.createGroupForm}>
-              <div className={styles.label}>Group Name</div>
+          {createdGroup ? (
+            <Card className={`${styles.shellCard} ${styles.createGroupCard}`}>
+              <div className={styles.createGroupForm} style={{ textAlign: "center" }}>
+                <CheckOutlined style={{ fontSize: '48px', color: '#2f7a32', marginBottom: '16px' }} />
+                <Title level={4} style={{ color: '#fff4eb' }}>Group Created Successfully!</Title>
+                <Text style={{ color: '#e5b8a7', fontSize: '16px' }}>{createdGroup.name}</Text>
+                
+                <div style={{ margin: '32px 0 24px 0', textAlign: 'left' }}>
+                  <div className={styles.label}>Invite Link</div>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <Input
+                      className={styles.createGroupInput}
+                      value={fullJoinUrl}
+                      readOnly
+                    />
+                    <Button
+                      className={styles.authButton}
+                      style={{ margin: 0, height: '42px', minWidth: '110px' }}
+                      onClick={handleCopyLink}
+                      icon={copied ? <CheckOutlined /> : <CopyOutlined />}
+                    >
+                      {copied ? "Copied!" : "Copy"}
+                    </Button>
+                  </div>
+                </div>
 
-              <Input
-                className={styles.createGroupInput}
-                placeholder="Enter group name"
-                value={groupName}
-                onChange={(event) => setGroupName(event.target.value)}
-                onPressEnter={handleCreateGroup}
-                maxLength={50}
-              />
-
-              {error && <Text className={styles.createGroupError}>{error}</Text>}
-
-              <div className={styles.createGroupSubmitWrap}>
-                <Button
-                  className={styles.createGroupSubmit}
-                  onClick={handleCreateGroup}
-                  loading={isSubmitting}
-                  icon={<TeamOutlined />}
-                >
-                  Create Group
-                </Button>
+                <div className={styles.createGroupSubmitWrap}>
+                  <Button
+                    className={styles.createGroupSubmit}
+                    onClick={() => router.push(`/groups/${createdGroup.id}`)}
+                  >
+                    Go to Group
+                  </Button>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          ) : (
+            <Card className={`${styles.shellCard} ${styles.createGroupCard}`}>
+              <div className={styles.createGroupForm}>
+                <div className={styles.label}>Group Name</div>
+
+                <Input
+                  className={styles.createGroupInput}
+                  placeholder="Enter group name"
+                  value={groupName}
+                  onChange={(event) => setGroupName(event.target.value)}
+                  onPressEnter={handleCreateGroup}
+                  maxLength={50}
+                />
+
+                {error && <Text className={styles.createGroupError}>{error}</Text>}
+
+                <div className={styles.createGroupSubmitWrap}>
+                  <Button
+                    className={styles.createGroupSubmit}
+                    onClick={handleCreateGroup}
+                    loading={isSubmitting}
+                    icon={<TeamOutlined />}
+                  >
+                    Create Group
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
     </div>

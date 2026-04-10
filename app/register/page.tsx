@@ -49,16 +49,18 @@ const Register: React.FC = () => {
   return (
     <div className={styles.loginContainer}>
       <div className={styles.headerSection}>
-        <div className={styles.brandRow}>
-          <Image
-            src="/logo.png"
-            alt="logo"
-            width={52}
-            height={52}
-            className={styles.logo}
-          />
-          <Title className={styles.title}>Movieblendr.</Title>
-        </div>
+        <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <div className={styles.brandRow}>
+            <Image
+              src="/logo.png"
+              alt="logo"
+              width={52}
+              height={52}
+              className={styles.logo}
+            />
+            <Title className={styles.title}>Movieblendr.</Title>
+          </div>
+        </Link>
         <Typography.Text type="secondary">
           Create your account to start blending
         </Typography.Text>

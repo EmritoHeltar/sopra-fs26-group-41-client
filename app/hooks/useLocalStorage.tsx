@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-
+import { useCallback, useEffect, useState } from "react";
 interface LocalStorage<T> {
   value: T;
   set: (newVal: T) => void;
@@ -45,22 +44,22 @@ export default function useLocalStorage<T>(
   }, [key]);
 
   // Simple setter that updates both state and localStorage
-  const set = (newVal: T) => {
+  const set = useCallback((newVal: T) => {
     setValue(newVal);
     if (typeof window !== "undefined") {
       const valueToStore =
         typeof newVal === "string" ? newVal : JSON.stringify(newVal);
       globalThis.localStorage.setItem(key, valueToStore);
     }
-  };
+  }, [key]);
 
   // Removes the key from localStorage and resets the state
-  const clear = () => {
+  const clear = useCallback(() => {
     setValue(defaultValue);
     if (typeof window !== "undefined") {
       globalThis.localStorage.removeItem(key);
     }
-  };
+  }, [key, defaultValue]);
 
   return { value, set, clear };
 }

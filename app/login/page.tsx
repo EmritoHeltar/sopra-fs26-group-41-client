@@ -50,18 +50,20 @@ const Login: React.FC = () => {
   return (
     <div className={styles.loginContainer}>
       <div className={styles.headerSection}>
-        <div className={styles.brandRow}>
-          <Image
-            src="/logo.png"
-            alt="logo"
-            width={52}
-            height={52}
-            className={styles.logo}
-          />
-          <Title level={2} className={styles.title}>
-            Movieblendr.
-          </Title>
-        </div>
+        <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <div className={styles.brandRow}>
+            <Image
+              src="/logo.png"
+              alt="logo"
+              width={52}
+              height={52}
+              className={styles.logo}
+            />
+            <Title level={2} className={styles.title}>
+              Movieblendr.
+            </Title>
+          </div>
+        </Link>
         <Typography.Text type="secondary">
           Welcome back! Login to continue
         </Typography.Text>

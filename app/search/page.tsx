@@ -7,6 +7,7 @@ import { useApi } from "@/hooks/useApi";
 import type { MovieSearchDTO, MovieSearchResponse } from "@/types/movie";
 import styles from "@/styles/page.module.css";
 import Image from "next/image";
+import Link from "next/link";
 
 const { Title, Text } = Typography;
 
@@ -120,18 +121,20 @@ const SearchResultsPage: React.FC = () => {
       <div className={styles.content}>
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
-            <div className={styles.brandRow}>
-              <Image
-                src="/logo.png"
-                alt="logo"
-                width={52}
-                height={52}
-                className={styles.logo}
-              />
-              <Title level={1} className={styles.brand}>
-                Movieblendr.
-              </Title>
-            </div>
+            <Link href="/users/me" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className={styles.brandRow}>
+                <Image
+                  src="/logo.png"
+                  alt="logo"
+                  width={52}
+                  height={52}
+                  className={styles.logo}
+                />
+                <Title level={1} className={styles.brand}>
+                  Movieblendr.
+                </Title>
+              </div>
+            </Link>
             <Title level={3} className={styles.subtitle}>
               Search Results
             </Title>
