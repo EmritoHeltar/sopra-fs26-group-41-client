@@ -83,8 +83,8 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@fly-die** | 15.04.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/38dc62bc8fcb3ab0ee22679ebb1c7842b4172ce8] | Implemented group recommendations UI #13 (fetching and displaying 10 recommended movies) | Enables users to see personalized group movie recommendations and navigate directly to movie detail pages. |
+| **@fly-die** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
