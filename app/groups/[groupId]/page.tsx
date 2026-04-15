@@ -94,7 +94,11 @@ export default function GroupOverview() {
         }
       } catch (err: unknown) {
         if (isMounted) {
-          setError(err instanceof Error ? err.message : "Failed to load group details.");
+          if (err instanceof Error) {
+            setError(err.message);
+          } else {
+            setError("Failed to load group details.");
+          }
         }
       } finally {
         if (isMounted) {
