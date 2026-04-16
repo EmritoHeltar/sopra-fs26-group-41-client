@@ -34,6 +34,12 @@ const Register: React.FC = () => {
       });
 
       setToken(loginResponse.token);
+      const pendingRedirect = localStorage.getItem("pendingRedirect");
+      if (pendingRedirect) {
+        localStorage.removeItem("pendingRedirect");
+        router.push(pendingRedirect);
+        return;
+      }
       router.replace("/users/me");
     } catch (error) {
       if (error instanceof Error) {
