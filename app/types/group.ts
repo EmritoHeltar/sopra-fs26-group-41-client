@@ -27,5 +27,5 @@ export interface GroupCreateResponse {
 }
 
 export interface JoinGroupResponse {
-  groupUrl: string;
+  groupId: number;
 }
