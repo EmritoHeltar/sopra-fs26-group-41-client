@@ -1116,3 +1116,27 @@
   height: 42px !important;
   min-width: 110px !important;
 }
+
+
+.joinCardBody {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.joinActionWrap {
+  margin-top: 24px;
+}
+
+.joinCardTitle {
+  color: #fff4eb !important;
+  margin: 0 0 8px !important;
+}
+
+.joinCardText {
+  color: #e5b8a7 !important;
+}
+
+.joinIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
