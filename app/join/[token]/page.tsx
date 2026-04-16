@@ -45,16 +45,8 @@ const JoinGroup: React.FC = () => {
         const response = await apiService.post<JoinGroupResponse>(`/groups/join/${token}`);
         if (!isMounted) return;
 
-        let resolved = "/users/me";
-        if (response.groupUrl.startsWith("/")) {
-          resolved = response.groupUrl;
-        } else {
-          try {
-            resolved = new URL(response.groupUrl).pathname;
-          } catch {
-            // keep fallback
-          }
-        }
+        const groupId = (response as JoinGroupResponse & { groupId?: number | string }).groupId;
+        const resolved = groupId ? `/groups/${groupId}` : "/users/me";
 
         setResolvedGroupUrl(resolved);
         setStatus("success");
