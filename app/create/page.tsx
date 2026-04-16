@@ -75,9 +75,13 @@ const CreateGroup: React.FC = () => {
   };
 
   // Build full origin link for copying
-  const fullJoinUrl = typeof window !== 'undefined' && createdGroup?.joinUrl?.startsWith('/') 
-    ? `${window.location.origin}${createdGroup.joinUrl}` 
-    : createdGroup?.joinUrl || '';
+  const joinToken = createdGroup?.joinUrl
+    ? createdGroup.joinUrl.split("/").filter(Boolean).pop() ?? ""
+    : "";
+
+  const fullJoinUrl = typeof window !== "undefined" && joinToken
+    ? `${window.location.origin}/join/${joinToken}`
+    : "";
 
   const handleCopyLink = () => {
     if (fullJoinUrl) {
@@ -128,7 +132,6 @@ const CreateGroup: React.FC = () => {
                 <CheckOutlined style={{ fontSize: '48px', color: '#2f7a32', marginBottom: '16px' }} />
                 <Title level={4} style={{ color: '#fff4eb' }}>Group Created Successfully!</Title>
                 <Text style={{ color: '#e5b8a7', fontSize: '16px' }}>{createdGroup.name}</Text>
-                
                 <div style={{ margin: '32px 0 24px 0', textAlign: 'left' }}>
                   <div className={styles.label}>Invite Link</div>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
