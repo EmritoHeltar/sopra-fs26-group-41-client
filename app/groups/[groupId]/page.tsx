@@ -19,6 +19,8 @@ export default function GroupOverview() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [isLeaving, setIsLeaving] = useState<boolean>(false);
+  const [leaveError, setLeaveError] = useState<string | null>(null);
 
   const [recommendations, setRecommendations] = useState<unknown[]>([]);
   const [recommendationsLoading, setRecommendationsLoading] = useState<boolean>(true);
@@ -127,6 +129,25 @@ export default function GroupOverview() {
     }
   };
 
+  const handleLeaveGroup = async () => {
+    try {
+      setIsLeaving(true);
+      setLeaveError(null);
+
+      const api = new ApiService();
+      await api.post(`/groups/${groupId}/leave`);
+      router.push("/users/me");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setLeaveError(err.message);
+      } else {
+        setLeaveError("Failed to leave group.");
+      }
+    } finally {
+      setIsLeaving(false);
+    }
+  };
+
   const owner = group?.members.find((member) => member.id === group.ownerId);
 
   const groupMatchReason = group && group.members.length < 2
@@ -172,8 +193,26 @@ export default function GroupOverview() {
             <Button className={styles.authButton} onClick={() => router.back()}>
               Back
             </Button>
+            <Button
+              className={styles.authButton}
+              onClick={handleLeaveGroup}
+              disabled={isLeaving}
+              loading={isLeaving}
+            >
+              Leave Group
+            </Button>
           </div>
         </div>
+
+        {leaveError && (
+          <div className={styles.section}>
+            <div className={`${styles.warningBox} ${styles.shellCard}`}>
+              <p className={styles.warningText}>
+                <strong>Error:</strong> {leaveError}
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className={styles.section}>
           <div className={`${styles.shellCard} ${styles.softCard} ${styles.groupInviteCard}`}>
