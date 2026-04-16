@@ -117,9 +117,13 @@ export default function GroupOverview() {
     };
   }, [groupId]);
 
-  const fullJoinUrl = typeof window !== "undefined" && group?.joinUrl?.startsWith("/")
-    ? `${window.location.origin}${group.joinUrl}`
-    : group?.joinUrl || "";
+  const joinToken = group?.joinUrl
+    ? group.joinUrl.split("/").filter(Boolean).pop() ?? ""
+    : "";
+
+  const fullJoinUrl = typeof window !== "undefined" && joinToken
+    ? `${window.location.origin}/join/${joinToken}`
+    : "";
 
   const handleCopyLink = () => {
     if (fullJoinUrl) {

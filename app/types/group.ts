@@ -25,3 +25,7 @@ export interface GroupCreateResponse {
   groupProfilePicture: string | null;
   joinUrl: string;
 }
+
+export interface JoinGroupResponse {
+  groupUrl: string;
+}

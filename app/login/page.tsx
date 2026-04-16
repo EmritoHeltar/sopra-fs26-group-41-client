@@ -35,6 +35,12 @@ const Login: React.FC = () => {
     try {
       const response = await apiService.post<LoginResponse>("/login", values);
       setToken(response.token);
+      const pendingRedirect = localStorage.getItem("pendingRedirect");
+      if (pendingRedirect) {
+        localStorage.removeItem("pendingRedirect");
+        router.push(pendingRedirect);
+        return;
+      }
       router.push("/users/me");
     } catch (error) {
       if (error instanceof Error) {
