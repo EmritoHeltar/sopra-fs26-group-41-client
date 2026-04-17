@@ -21,6 +21,7 @@ export default function GroupOverview() {
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
   const [isLeaving, setIsLeaving] = useState<boolean>(false);
   const [leaveError, setLeaveError] = useState<string | null>(null);
+  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState<boolean>(false);
 
   const [recommendations, setRecommendations] = useState<unknown[]>([]);
   const [recommendationsLoading, setRecommendationsLoading] = useState<boolean>(true);
@@ -195,24 +196,12 @@ export default function GroupOverview() {
             </Button>
             <Button
               className={styles.authButton}
-              onClick={handleLeaveGroup}
-              disabled={isLeaving}
-              loading={isLeaving}
+              onClick={() => { setLeaveError(null); setIsLeaveDialogOpen(true); }}
             >
               Leave Group
             </Button>
           </div>
         </div>
-
-        {leaveError && (
-          <div className={styles.section}>
-            <div className={`${styles.warningBox} ${styles.shellCard}`}>
-              <p className={styles.warningText}>
-                <strong>Error:</strong> {leaveError}
-              </p>
-            </div>
-          </div>
-        )}
 
         <div className={styles.section}>
           <div className={`${styles.shellCard} ${styles.softCard} ${styles.groupInviteCard}`}>
@@ -359,6 +348,44 @@ export default function GroupOverview() {
           </div>
         </div>
       </div>
+
+      {isLeaveDialogOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => { if (!isLeaving) setIsLeaveDialogOpen(false); }}
+        >
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h3 className={styles.modalTitle}>Leave group?</h3>
+            <p className={styles.modalSubtitle}>
+              Are you sure you want to leave <strong>{group.name}</strong>? You will need a new invite link to rejoin.
+            </p>
+
+            {leaveError && (
+              <div className={styles.errorAlert}>
+                <p className={styles.warningText}>{leaveError}</p>
+              </div>
+            )}
+
+            <div className={styles.modalActions}>
+              <Button
+                className={styles.modalCancelButton}
+                onClick={() => setIsLeaveDialogOpen(false)}
+                disabled={isLeaving}
+              >
+                Cancel
+              </Button>
+              <Button
+                className={styles.modalConfirmButton}
+                onClick={handleLeaveGroup}
+                disabled={isLeaving}
+                loading={isLeaving}
+              >
+                Leave group
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
