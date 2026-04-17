@@ -64,34 +64,12 @@ export default function GroupOverview() {
             setRecommendations(recommendationData.recommendations ?? []);
             setRecommendationsError(null);
           }
-        } catch (recErr: unknown) {
+        } catch {
           if (isMounted) {
             setRecommendations([]);
-
-            if (
-              typeof recErr === "object" &&
-              recErr !== null &&
-              "response" in recErr &&
-              typeof (recErr as { response?: unknown }).response === "object" &&
-              (recErr as { response?: unknown }).response !== null
-            ) {
-              const response = (recErr as { response?: { status?: number; data?: { detail?: string; reason?: string } } }).response;
-              const status = response?.status;
-
-              if (status === 409) {
-                setRecommendationsError(
-                  "Recommendations will appear once at least one group member uploads Letterboxd data."
-                );
-              } else {
-                setRecommendationsError(
-                  "Recommendations will appear once at least one group member uploads Letterboxd data."
-                );
-              }
-            } else {
-              setRecommendationsError(
-                "Recommendations will appear once at least one group member uploads Letterboxd data."
-              );
-            }
+            setRecommendationsError(
+              "Recommendations will appear once at least one group member uploads Letterboxd data."
+            );
           }
         }
       } catch (err: unknown) {
@@ -324,45 +302,37 @@ export default function GroupOverview() {
                   Loading recommendations...
                 </p>
               </div>
+            ) : recommendationsError ? (
+              <p className={styles.helperText}>{recommendationsError}</p>
+            ) : recommendations.length === 0 ? (
+              <p className={styles.helperText}>No recommendations available.</p>
             ) : (
-              <>
-                {recommendationsError && (
-                  <p className={styles.helperText}>
-                    {recommendationsError}
-                  </p>
-                )}
+              <div className={styles.groupRecommendationsList}>
+                {recommendations.slice(0, 10).map((movie) => {
+                  const recommendation = movie as {
+                    movieId?: string;
+                    title?: string;
+                  };
 
-                {recommendations.length === 0 ? (
-                  <p className={styles.helperText}>No recommendations available.</p>
-                ) : (
-                  <div className={styles.groupRecommendationsList}>
-                    {recommendations.slice(0, 10).map((movie) => {
-                      const recommendation = movie as {
-                        movieId?: string;
-                        title?: string;
-                      };
+                  if (!recommendation.movieId) {
+                    return null;
+                  }
 
-                      if (!recommendation.movieId) {
-                        return null;
-                      }
-
-                      return (
-                        <Link
-                          key={recommendation.movieId}
-                          href={`/movies/${recommendation.movieId}`}
-                          className={styles.groupRecommendationLink}
-                        >
-                          <div className={`${styles.softCard} ${styles.groupRecommendationItem}`}>
-                            <p className={styles.groupRecommendationTitle}>
-                              {recommendation.title ?? "Untitled movie"}
-                            </p>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
-              </>
+                  return (
+                    <Link
+                      key={recommendation.movieId}
+                      href={`/movies/${recommendation.movieId}`}
+                      className={styles.groupRecommendationLink}
+                    >
+                      <div className={`${styles.softCard} ${styles.groupRecommendationItem}`}>
+                        <p className={styles.groupRecommendationTitle}>
+                          {recommendation.title ?? "Untitled movie"}
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>
