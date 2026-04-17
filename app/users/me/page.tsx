@@ -207,6 +207,9 @@ const Profile: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.content}>
+        <Button className={styles.groupsOverviewFab} onClick={() => router.push("/groups")}>
+          <TeamOutlined />
+        </Button>
         <Button className={styles.createGroupFab} onClick={handleOpenCreateGroup}>
           +
         </Button>
@@ -240,13 +243,6 @@ const Profile: React.FC = () => {
               onSearch={handleSearch}
               enterButton
             />
-            <Button
-              className={styles.authButton}
-              icon={<TeamOutlined />}
-              onClick={() => router.push("/groups")}
-            >
-              My Groups
-            </Button>
             <Button className={styles.authButton} onClick={handleLogout}>
               Log out
             </Button>

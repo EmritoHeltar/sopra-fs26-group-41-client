@@ -963,6 +963,34 @@
   color: #fff !important;
 }
 
+.groupsOverviewFab {
+  position: fixed !important;
+  bottom: 32px !important;
+  right: 104px !important;
+  top: auto !important;
+  left: auto !important;
+  margin: 0 !important;
+  width: 60px !important;
+  min-width: 60px !important;
+  height: 60px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 22px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  z-index: 1000 !important;
+}
+
+.groupsOverviewFab:hover {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  color: #fff !important;
+}
+
 .groupMemberCount {
   margin: 4px 0 0 0;
   font-size: 16px;
