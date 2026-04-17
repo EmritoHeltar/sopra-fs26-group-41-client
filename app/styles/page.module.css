@@ -1140,3 +1140,63 @@
   font-size: 48px;
   margin-bottom: 16px;
 }
+
+/* ── Groups overview ────────────────────────────────────────────────────── */
+
+.groupsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.groupCard {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.groupCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4) !important;
+  border-color: rgba(165, 42, 31, 0.6) !important;
+}
+
+.groupCardPictureWrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  background: rgba(255, 244, 235, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.groupCardPicture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.groupCardPictureFallback {
+  color: #8f6d60;
+  font-size: 13px;
+}
+
+.groupCardName {
+  color: #fff4eb;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.groupCardMeta {
+  color: #8f6d60;
+  font-size: 13px;
+  margin: 0;
+}

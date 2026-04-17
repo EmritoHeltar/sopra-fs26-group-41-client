@@ -89,9 +89,41 @@ const GroupsOverview: React.FC = () => {
         </div>
 
         <Card className={styles.shellCard}>
-          {isLoading && (
+          {isLoading ? (
             <div className={styles.loadingWrap}>
               <Spin size="large" />
+            </div>
+          ) : error ? (
+            <div className={styles.warningBox}>
+              <p className={styles.warningText}>{error}</p>
+            </div>
+          ) : groups.length === 0 ? (
+            <p className={styles.helperText}>You are not a member of any groups yet.</p>
+          ) : (
+            <div className={styles.groupsGrid}>
+              {groups.map((group) => (
+                <Card
+                  key={group.id}
+                  className={`${styles.softCard} ${styles.groupCard}`}
+                  onClick={() => router.push(`/groups/${group.id}`)}
+                >
+                  <div className={styles.groupCardPictureWrap}>
+                    {group.groupProfilePicture ? (
+                      <img
+                        src={group.groupProfilePicture}
+                        alt={`${group.name} picture`}
+                        className={styles.groupCardPicture}
+                      />
+                    ) : (
+                      <span className={styles.groupCardPictureFallback}>No picture</span>
+                    )}
+                  </div>
+                  <p className={styles.groupCardName}>{group.name}</p>
+                  <p className={styles.groupCardMeta}>
+                    {group.memberCount} member{group.memberCount !== 1 ? "s" : ""}
+                  </p>
+                </Card>
+              ))}
             </div>
           )}
         </Card>
