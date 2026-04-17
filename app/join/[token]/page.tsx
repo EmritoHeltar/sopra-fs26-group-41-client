@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Button, Card, Spin, Typography } from "antd";
-import { CheckOutlined, TeamOutlined } from "@ant-design/icons";
+import { TeamOutlined } from "@ant-design/icons";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { JoinGroupResponse } from "@/types/group";
@@ -95,7 +95,6 @@ const JoinGroup: React.FC = () => {
     if (status === "success") {
       return (
         <>
-          <CheckOutlined className={styles.joinIcon} style={{ color: "#2f7a32" }} />
           <Title level={4} className={styles.joinCardTitle}>
             You joined the group!
           </Title>
