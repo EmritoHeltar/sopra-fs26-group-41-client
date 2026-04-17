@@ -96,6 +96,11 @@ export default function GroupOverview() {
         }
       } catch (err: unknown) {
         if (isMounted) {
+          if ((err as { status?: number }).status === 401) {
+            router.replace("/login");
+            return;
+          }
+
           if (err instanceof Error) {
             setError(err.message);
           } else {
@@ -335,22 +340,21 @@ export default function GroupOverview() {
                       const recommendation = movie as {
                         movieId?: string;
                         title?: string;
-                        year?: number;
                       };
+
+                      if (!recommendation.movieId) {
+                        return null;
+                      }
 
                       return (
                         <Link
-                          key={recommendation.movieId ?? recommendation.title ?? "recommendation"}
-                          href={`/movies/${recommendation.movieId ?? ""}`}
+                          key={recommendation.movieId}
+                          href={`/movies/${recommendation.movieId}`}
                           className={styles.groupRecommendationLink}
                         >
                           <div className={`${styles.softCard} ${styles.groupRecommendationItem}`}>
                             <p className={styles.groupRecommendationTitle}>
                               {recommendation.title ?? "Untitled movie"}
-                            </p>
-
-                            <p className={styles.groupRecommendationYear}>
-                              {recommendation.year ?? "Year unavailable"}
                             </p>
                           </div>
                         </Link>

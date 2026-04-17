@@ -78,14 +78,6 @@ const MoviePage: React.FC = () => {
         setMovie(response);
         setError(null);
         setMovieLoading(false);
-
-        const raw = response.tasteOverlap;
-        const value = typeof raw === "number" ? raw : Number(raw);
-        if (!isNaN(value) && raw != null) {
-          setOverlapState({ status: "ready", value });
-        } else {
-          setOverlapState({ status: "unavailable" });
-        }
       } catch (err) {
         if (!isMounted) return;
 
@@ -104,7 +96,39 @@ const MoviePage: React.FC = () => {
       }
     };
 
+    const fetchOverlap = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token || !movieId) {
+        return;
+      }
+
+      try {
+        const response = await apiService.get<number | { tasteOverlap?: number | null } | null>(
+          `/movies/${movieId}/overlap`
+        );
+        if (!isMounted) return;
+
+        const value =
+          typeof response === "number"
+            ? response
+            : typeof response === "object" && response !== null && typeof response.tasteOverlap === "number"
+              ? response.tasteOverlap
+              : null;
+
+        if (typeof value === "number" && !isNaN(value)) {
+          setOverlapState({ status: "ready", value });
+        } else {
+          setOverlapState({ status: "unavailable" });
+        }
+      } catch {
+        if (!isMounted) return;
+        setOverlapState({ status: "unavailable" });
+      }
+    };
+
     fetchMovie();
+    fetchOverlap();
 
     return () => {
       isMounted = false;
@@ -126,7 +150,7 @@ const MoviePage: React.FC = () => {
         <div className={styles.section}>
           <div className={styles.tasteMatchBanner}>
             <Spin size="small" />
-            <span className={styles.tasteMatchText}>Calculating taste overlap…</span>
+            <span className={styles.tasteMatchText}>Taste overlap loading…</span>
           </div>
         </div>
       );
@@ -197,7 +221,6 @@ const MoviePage: React.FC = () => {
             <div className={styles.loadingWrap}>
               <Spin size="large" />
             </div>
-            {renderOverlap()}
           </Card>
         </div>
       </div>

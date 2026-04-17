@@ -104,15 +104,17 @@ const CreateGroup: React.FC = () => {
                 </Title>
               </div>
             </Link>
-            <div style={{ marginTop: "70px", marginLeft: "285px", marginBottom: "-17px" }} >
-              <Title
-                level={3}
-                className={styles.subtitle}
-                style={{ textAlign: "center", width: "100%" }}
-              >
-                Create Group
-              </Title>
-            </div>
+            {!createdGroup && (
+              <div style={{ marginTop: "70px", marginLeft: "285px", marginBottom: "-17px" }}>
+                <Title
+                  level={3}
+                  className={styles.subtitle}
+                  style={{ textAlign: "center", width: "100%" }}
+                >
+                  Create Group
+                </Title>
+              </div>
+            )}
           </div>
 
           <div className={styles.heroRight}>
@@ -129,7 +131,6 @@ const CreateGroup: React.FC = () => {
           {createdGroup ? (
             <Card className={`${styles.shellCard} ${styles.createGroupCard}`}>
               <div className={styles.createGroupForm} style={{ textAlign: "center" }}>
-                <CheckOutlined style={{ fontSize: '48px', color: '#2f7a32', marginBottom: '16px' }} />
                 <Title level={4} style={{ color: '#fff4eb' }}>Group Created Successfully!</Title>
                 <Text style={{ color: '#e5b8a7', fontSize: '16px' }}>{createdGroup.name}</Text>
                 <div style={{ margin: '32px 0 24px 0', textAlign: 'left' }}>
