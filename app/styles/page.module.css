@@ -163,7 +163,9 @@
 .page {
   min-height: 100vh;
   padding: 20px 24px 48px;
-  background: radial-gradient(1100px 560px at 18% -10%, rgba(244, 228, 205, 0.18) 0%, rgba(244, 228, 205, 0) 60%),
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 42%, rgba(160, 60, 30, 0.13) 0%, transparent 70%),
+    radial-gradient(1100px 560px at 18% -10%, rgba(244, 228, 205, 0.18) 0%, rgba(244, 228, 205, 0) 60%),
     linear-gradient(180deg, #5a524b 0%, #4b443d 55%, #403a34 100%);
   display: flex;
   position: relative;
@@ -247,6 +249,11 @@
   border: 1px solid rgba(255, 244, 235, 0.68) !important;
   background: linear-gradient(180deg, rgba(21, 18, 17, 0.94) 0%, rgba(15, 13, 12, 0.98) 100%) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.softCard:hover {
+  border-color: rgba(255, 244, 235, 1) !important;
 }
 
 .label {
@@ -476,6 +483,7 @@
 .authButton:hover {
   background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
   color: #fff !important;
+  box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18), 0 0 20px rgba(178, 49, 35, 0.35) !important;
 }
 
 .heroLeft {
@@ -504,6 +512,7 @@
 
 .uploadTriggerButton:hover {
   background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  box-shadow: 0 4px 10px rgba(120, 34, 20, 0.15), 0 0 20px rgba(178, 49, 35, 0.35) !important;
 }
 
 .modalOverlay {
@@ -697,6 +706,21 @@
   padding: 8px 16px;
   height: 42px;
   font-size: 14px;
+}
+
+.searchInput :global(.ant-input:hover),
+.searchInput :global(.ant-input:focus),
+.searchInput :global(.ant-input-focused),
+.searchInput :global(.ant-input-affix-wrapper:hover),
+.searchInput :global(.ant-input-affix-wrapper:focus),
+.searchInput :global(.ant-input-affix-wrapper-focused),
+.searchInput :global(.ant-input-group-wrapper:hover),
+.searchInput :global(.ant-input-search:hover .ant-input),
+.searchInput :global(.ant-input-search-with-button:hover),
+.searchInput :global(.ant-input-wrapper:hover .ant-input) {
+  border-color: rgba(255, 244, 235, 1) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .searchInput :global(.ant-input::placeholder) {
@@ -927,68 +951,65 @@
   color: #fff !important;
 }
 
+.fabRow {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 40px;
+  margin-bottom: 16px;
+}
+
 .createGroupFab {
-  position: fixed !important;
-  bottom: 32px !important;
-  right: 32px !important;
-  top: auto !important;
-  left: auto !important;
   margin: 0 !important;
-  width: 60px !important;
-  min-width: 60px !important;
-  height: 60px !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  height: 72px !important;
   padding: 0 !important;
   border-radius: 50% !important;
   background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
   border: none !important;
   color: white !important;
-  font-size: 36px !important;
+  font-size: 40px !important;
   font-weight: 400 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   line-height: 0.85 !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-  z-index: 1000 !important;
 }
 
 .createGroupFab :global(span) {
   display: inline-block;
   transform: translateY(-3px);
-  /* needed to move "+" up since it's not centered in ascii*/
 }
 
 .createGroupFab:hover {
   background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
   color: #fff !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 20px rgba(178, 49, 35, 0.35) !important;
 }
 
 .groupsOverviewFab {
-  position: fixed !important;
-  bottom: 32px !important;
-  right: 104px !important;
-  top: auto !important;
-  left: auto !important;
   margin: 0 !important;
-  width: 60px !important;
-  min-width: 60px !important;
-  height: 60px !important;
+  width: 72px !important;
+  min-width: 72px !important;
+  height: 72px !important;
   padding: 0 !important;
   border-radius: 50% !important;
   background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
   border: none !important;
   color: white !important;
-  font-size: 22px !important;
+  font-size: 26px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-  z-index: 1000 !important;
 }
 
 .groupsOverviewFab:hover {
   background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
   color: #fff !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 20px rgba(178, 49, 35, 0.35) !important;
 }
 
 .groupMemberCount {

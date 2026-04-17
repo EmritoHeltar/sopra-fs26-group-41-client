@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Card, Spin, Typography, Button, Input } from "antd";
+import { Card, Spin, Typography, Button, Input, Tooltip } from "antd";
 import { TeamOutlined } from "@ant-design/icons";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
@@ -207,12 +207,6 @@ const Profile: React.FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.content}>
-        <Button className={styles.groupsOverviewFab} onClick={() => router.push("/groups")}>
-          <TeamOutlined />
-        </Button>
-        <Button className={styles.createGroupFab} onClick={handleOpenCreateGroup}>
-          +
-        </Button>
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
             <Link href="/users/me" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -282,7 +276,7 @@ const Profile: React.FC = () => {
               <Text className={styles.helperText} style={{ marginTop: "8px", display: "block" }}>
                 {isConnected
                   ? "Your Letterboxd data is available and your stats are shown below."
-                  : "No Letterboxd data uploaded yet. Your stats are shown with default values for now."}
+                  : "No Letterboxd data uploaded yet. Upload now to get recommendations."}
               </Text>
 
               <Button
@@ -337,6 +331,27 @@ const Profile: React.FC = () => {
             )}
           </div>
         </Card>
+
+        <div className={styles.fabRow}>
+          <Tooltip
+            title={<span style={{ color: "#e2a684", fontSize: "11px", letterSpacing: "0.08em" }}>MY GROUPS</span>}
+            placement="bottom"
+            color="rgba(21, 18, 17, 0.96)"
+          >
+            <Button className={styles.groupsOverviewFab} onClick={() => router.push("/groups")}>
+              <TeamOutlined />
+            </Button>
+          </Tooltip>
+          <Tooltip
+            title={<span style={{ color: "#e2a684", fontSize: "11px", letterSpacing: "0.08em" }}>CREATE GROUP</span>}
+            placement="bottom"
+            color="rgba(21, 18, 17, 0.96)"
+          >
+            <Button className={styles.createGroupFab} onClick={handleOpenCreateGroup}>
+              +
+            </Button>
+          </Tooltip>
+        </div>
       </div >
 
       {isUploadDialogOpen && (
