@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button, Card, Spin, Typography } from "antd";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
+import type { GroupSummary, GroupsListResponse } from "@/types/group";
 import styles from "@/styles/page.module.css";
 
 const { Title } = Typography;
@@ -15,7 +16,9 @@ const GroupsOverview: React.FC = () => {
   const apiService = useApi();
   const { clear: clearToken } = useLocalStorage<string>("token", "");
 
+  const [groups, setGroups] = useState<GroupSummary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogout = () => {
     clearToken();
@@ -23,11 +26,40 @@ const GroupsOverview: React.FC = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.replace("/login");
-    }
-  }, [router]);
+    let isMounted = true;
+
+    const fetchGroups = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.replace("/login");
+        return;
+      }
+
+      try {
+        const response = await apiService.get<GroupsListResponse>("/groups");
+        if (!isMounted) return;
+        setGroups(response.groups ?? []);
+        setError(null);
+      } catch (err) {
+        if (!isMounted) return;
+        const status = (err as { status?: number }).status;
+        if (status === 401 || status === 403) {
+          clearToken();
+          router.replace("/login");
+          return;
+        }
+        setError(err instanceof Error ? err.message : "Failed to load groups.");
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+
+    fetchGroups();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [apiService, clearToken, router]);
 
   return (
     <div className={styles.page}>

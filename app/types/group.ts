@@ -29,3 +29,14 @@ export interface GroupCreateResponse {
 export interface JoinGroupResponse {
   groupId: number;
 }
+
+export interface GroupSummary {
+  id: number;
+  name: string;
+  groupProfilePicture: string | null;
+  memberCount: number;
+}
+
+export interface GroupsListResponse {
+  groups: GroupSummary[];
+}
