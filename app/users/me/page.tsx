@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Spin, Typography, Button, Input } from "antd";
+import { TeamOutlined } from "@ant-design/icons";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MyProfile, LetterboxdImportResponse } from "@/types/user";
@@ -239,6 +240,13 @@ const Profile: React.FC = () => {
               onSearch={handleSearch}
               enterButton
             />
+            <Button
+              className={styles.authButton}
+              icon={<TeamOutlined />}
+              onClick={() => router.push("/groups")}
+            >
+              My Groups
+            </Button>
             <Button className={styles.authButton} onClick={handleLogout}>
               Log out
             </Button>
