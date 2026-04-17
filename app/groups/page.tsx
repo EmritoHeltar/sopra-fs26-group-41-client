@@ -9,7 +9,7 @@ import useLocalStorage from "@/hooks/useLocalStorage";
 import type { GroupSummary, GroupsListResponse } from "@/types/group";
 import styles from "@/styles/page.module.css";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const GroupsOverview: React.FC = () => {
   const router = useRouter();
@@ -95,7 +95,9 @@ const GroupsOverview: React.FC = () => {
             </div>
           ) : error ? (
             <div className={styles.warningBox}>
-              <p className={styles.warningText}>{error}</p>
+              <Text className={styles.warningLabel}>Error</Text>
+              <br />
+              <Text className={styles.warningText}>{error}</Text>
             </div>
           ) : groups.length === 0 ? (
             <p className={styles.helperText}>You are not a member of any groups yet.</p>
