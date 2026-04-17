@@ -79,8 +79,10 @@ const MoviePage: React.FC = () => {
         setError(null);
         setMovieLoading(false);
 
-        if (typeof response.tasteOverlap === "number") {
-          setOverlapState({ status: "ready", value: response.tasteOverlap });
+        const raw = response.tasteOverlap;
+        const value = typeof raw === "number" ? raw : Number(raw);
+        if (!isNaN(value) && raw != null) {
+          setOverlapState({ status: "ready", value });
         } else {
           setOverlapState({ status: "unavailable" });
         }
@@ -195,6 +197,7 @@ const MoviePage: React.FC = () => {
             <div className={styles.loadingWrap}>
               <Spin size="large" />
             </div>
+            {renderOverlap()}
           </Card>
         </div>
       </div>
