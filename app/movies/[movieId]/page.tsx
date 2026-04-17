@@ -12,8 +12,13 @@ import styles from "@/styles/page.module.css";
 
 const { Title, Text, Paragraph } = Typography;
 
-const MoviePage: React.FC = () => {
+type OverlapState =
+  | { status: "loading" }
+  | { status: "ready"; value: number }
+  | { status: "unavailable" }
+  | { status: "error" };
 
+const MoviePage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const apiService = useApi();
@@ -25,10 +30,10 @@ const MoviePage: React.FC = () => {
   }, [params]);
 
   const [movie, setMovie] = useState<MovieDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [movieLoading, setMovieLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [overlapState, setOverlapState] = useState<OverlapState>({ status: "loading" });
   const [searchQuery, setSearchQuery] = useState("");
-
 
   const handleLogout = () => {
     clearToken();
@@ -37,14 +42,18 @@ const MoviePage: React.FC = () => {
 
   const handleSearch = () => {
     const trimmedQuery = searchQuery.trim();
-    if (!trimmedQuery) {
-      return;
-    }
-
+    if (!trimmedQuery) return;
     router.push(`/search?query=${encodeURIComponent(trimmedQuery)}`);
   };
 
   useEffect(() => {
+    let isMounted = true;
+
+    setMovie(null);
+    setMovieLoading(true);
+    setError(null);
+    setOverlapState({ status: "loading" });
+
     const fetchMovie = async () => {
       const token = localStorage.getItem("token");
 
@@ -54,96 +63,151 @@ const MoviePage: React.FC = () => {
       }
 
       if (!movieId) {
-        setError("Movie id is missing.");
-        setIsLoading(false);
+        if (isMounted) {
+          setError("Movie id is missing.");
+          setMovieLoading(false);
+          setOverlapState({ status: "unavailable" });
+        }
         return;
       }
 
       try {
         const response = await apiService.get<MovieDetails>(`/movies/${movieId}`);
+        if (!isMounted) return;
 
-        //**const fakeResponse = {
-        //...response,
-        //tasteOverlap: 72, //using this for testing rn since backend not ready yet
-        //};
-        //setMovie(fakeResponse);
-
-        setMovie(response)
+        setMovie(response);
         setError(null);
-      } catch (err) {
-        if (err instanceof Error) {
-          const status = (err as { status?: number }).status;
+        setMovieLoading(false);
 
-          if (status === 401 || status === 403) {
-            clearToken();
-            router.replace("/login");
-            return;
-          }
-
-          setError(err.message);
+        if (typeof response.tasteOverlap === "number") {
+          setOverlapState({ status: "ready", value: response.tasteOverlap });
         } else {
-          setError("Failed to load movie details.");
+          setOverlapState({ status: "unavailable" });
         }
-      } finally {
-        setIsLoading(false);
+      } catch (err) {
+        if (!isMounted) return;
+
+        const status = (err as { status?: number }).status;
+
+        if (status === 401 || status === 403) {
+          clearToken();
+          router.replace("/login");
+          return;
+        }
+
+        const message = err instanceof Error ? err.message : "Failed to load movie details.";
+        setError(message);
+        setMovieLoading(false);
+        setOverlapState({ status: "error" });
       }
     };
 
     fetchMovie();
-  }, [apiService, clearToken, movieId, router]);
 
-  if (isLoading) {
+    return () => {
+      isMounted = false;
+    };
+  }, [movieId, apiService, clearToken, router]);
+
+  const genreList =
+    movie?.genres
+      ?.split(",")
+      .map((genre) => genre.trim())
+      .filter(Boolean) ?? [];
+
+  const hasPoster =
+    movie?.posterUrl && movie.posterUrl !== "N/A" && movie.posterUrl.trim() !== "";
+
+  const renderOverlap = () => {
+    if (overlapState.status === "loading") {
+      return (
+        <div className={styles.section}>
+          <div className={styles.tasteMatchBanner}>
+            <Spin size="small" />
+            <span className={styles.tasteMatchText}>Calculating taste overlap…</span>
+          </div>
+        </div>
+      );
+    }
+    if (overlapState.status === "ready") {
+      return (
+        <div className={styles.section}>
+          <div className={styles.tasteMatchBanner}>
+            <UserOutlined style={{ fontSize: 16, color: "#86fd80" }} />
+            <span className={styles.tasteMatchValue}>{overlapState.value}% Match</span>
+            <span className={styles.tasteMatchText}>with your Letterboxd taste profile</span>
+          </div>
+        </div>
+      );
+    }
+    if (overlapState.status === "error") {
+      return (
+        <div className={styles.section}>
+          <div className={styles.tasteMatchBanner}>
+            <span className={styles.tasteMatchText}>Taste overlap unavailable.</span>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const nav = (
+    <div className={styles.hero}>
+      <div className={styles.heroLeft}>
+        <Link href="/users/me" style={{ textDecoration: "none", color: "inherit" }}>
+          <div className={styles.brandRow}>
+            <img src="/logo.png" alt="logo" className={styles.logo} />
+            <Title level={1} className={styles.brand}>
+              Movieblendr.
+            </Title>
+          </div>
+        </Link>
+        <Title level={3} className={styles.subtitle}>
+          Movie Details
+        </Title>
+      </div>
+      <div className={styles.heroRight}>
+        <Input.Search
+          className={styles.searchInput}
+          placeholder="Search movies..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onSearch={handleSearch}
+          enterButton
+        />
+        <Button className={styles.authButton} onClick={() => router.back()}>
+          Back
+        </Button>
+        <Button className={styles.authButton} onClick={handleLogout}>
+          Logout
+        </Button>
+      </div>
+    </div>
+  );
+
+  if (movieLoading) {
     return (
       <div className={styles.page}>
         <div className={styles.content}>
-          <div className={styles.loadingWrap}>
-            <Spin size="large" />
-          </div>
+          {nav}
+          <Card className={styles.shellCard}>
+            <div className={styles.loadingWrap}>
+              <Spin size="large" />
+            </div>
+          </Card>
         </div>
       </div>
     );
   }
 
-  if (!movie) {
+  if (error || !movie) {
     return (
       <div className={styles.page}>
         <div className={styles.content}>
-          <div className={styles.hero}>
-            <div className={styles.heroLeft}>
-              <Link href="/users/me" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div className={styles.brandRow}>
-                  <img src="/logo.png" alt="logo" className={styles.logo} />
-                  <Title level={1} className={styles.brand}>
-                    Movieblendr.
-                  </Title>
-                </div>
-              </Link>
-              <Title level={3} className={styles.subtitle}>
-                Movie Details
-              </Title>
-            </div>
-
-            <div className={styles.heroRight}>
-              <Input.Search
-                className={styles.searchInput}
-                placeholder="Search movies..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onSearch={handleSearch}
-                enterButton
-              />
-              <Button className={styles.authButton} onClick={() => router.back()}>
-                Back
-              </Button>
-              <Button className={styles.authButton} onClick={handleLogout}>
-                Logout
-              </Button>
-            </div>
-          </div>
-
+          {nav}
           <Card className={styles.shellCard}>
             <Text type="danger">{error ?? "Failed to load movie details."}</Text>
-
             <div className={styles.errorActions}>
               <Button className={styles.authButton} onClick={() => router.back()}>
                 Go back
@@ -155,51 +219,10 @@ const MoviePage: React.FC = () => {
     );
   }
 
-  const genreList =
-    movie.genres
-      ?.split(",")
-      .map((genre) => genre.trim())
-      .filter(Boolean) ?? [];
-
-  const hasPoster =
-    movie.posterUrl && movie.posterUrl !== "N/A" && movie.posterUrl.trim() !== "";
-
   return (
     <div className={styles.page}>
       <div className={styles.content}>
-        <div className={styles.hero}>
-          <div className={styles.heroLeft}>
-            <Link href="/users/me" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div className={styles.brandRow}>
-                <img src="/logo.png" alt="logo" className={styles.logo} />
-                <Title level={1} className={styles.brand}>
-                  Movieblendr.
-                </Title>
-              </div>
-            </Link>
-            <Title level={3} className={styles.subtitle}>
-              Movie Details
-            </Title>
-          </div>
-
-          <div className={styles.heroRight}>
-            <Input.Search
-              className={styles.searchInput}
-              placeholder="Search movies..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onSearch={handleSearch}
-              enterButton
-            />
-            <Button className={styles.authButton} onClick={() => router.back()}>
-              Back
-            </Button>
-            <Button className={styles.authButton} onClick={handleLogout}>
-              Logout
-            </Button>
-          </div>
-        </div>
-
+        {nav}
         <Card className={styles.shellCard}>
           <div className={styles.movieLayout}>
             <div>
@@ -242,21 +265,12 @@ const MoviePage: React.FC = () => {
                 </Card>
               </div>
 
-              {typeof movie.tasteOverlap === "number" && (
-                <div className={styles.section}>
-                  <div className={styles.tasteMatchBanner}>
-                    <UserOutlined style={{ fontSize: 16, color: "#86fd80" }} />
-                    <span className={styles.tasteMatchValue}>{movie.tasteOverlap}% Match</span>
-                    <span className={styles.tasteMatchText}>with your Letterboxd taste profile</span>
-                  </div>
-                </div>
-              )}
+              {renderOverlap()}
 
               <div className={styles.section}>
                 <Title level={3} className={styles.sectionTitle}>
                   Genres
                 </Title>
-
                 {genreList.length > 0 ? (
                   <div className={styles.genreWrap}>
                     {genreList.map((genre) => (
