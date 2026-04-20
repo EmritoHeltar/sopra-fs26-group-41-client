@@ -4,6 +4,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, Spin, Typography, Button } from "antd";
 import { useApi } from "@/hooks/useApi";
+import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MovieSearchDTO, MovieSearchResponse } from "@/types/movie";
 import styles from "@/styles/page.module.css";
 import Image from "next/image";
@@ -16,6 +17,7 @@ const SearchResultsContent: React.FC = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
   const apiService = useApi();
+  const { clear: clearToken } = useLocalStorage("token", "");
 
   const [movies, setMovies] = useState<MovieSearchDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,6 +41,17 @@ const SearchResultsContent: React.FC = () => {
         setError(null);
       } catch (err) {
         setMovies([]);
+
+        const status =
+          (err as { status?: number; response?: { status?: number } })?.status ??
+          (err as { response?: { status?: number } })?.response?.status;
+
+        if (status === 401 || status === 403) {
+          clearToken();
+          router.replace("/login");
+          return;
+        }
+
         if (err instanceof Error) {
           setError(err.message);
         } else {

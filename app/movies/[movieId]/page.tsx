@@ -35,9 +35,14 @@ const MoviePage: React.FC = () => {
   const [overlapState, setOverlapState] = useState<OverlapState>({ status: "loading" });
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleLogout = () => {
-    clearToken();
-    router.replace("/login");
+  const handleLogout = async () => {
+    try {
+      await apiService.post("/logout");
+    } catch {
+    } finally {
+      clearToken();
+      router.replace("/login");
+    }
   };
 
   const handleSearch = () => {
