@@ -98,8 +98,8 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
-| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@fly-die** | 20.04.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/e3905fbb5859ca975ecfec68dfcc9350cb0629dc]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/33591e83b7eb42eadc45e3785cee08f11cf8f0e3]<br>[https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/87327a3f7cc44eaaf81008f530dd265d385f8377] | Allowed for poll creating by implementing the button on the /groups/[id] page. Also made the button send a POST request to the backend. | This will be the entry point for a group owner to start a poll, which is our core feature. |
+| **@fly-die** | 20.04.2026 | [(https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/a305d03b66186c62b006a22e60c92fd90f1f8092] | Added WebSocket-based live poll notifications and redirect onClick #31 & #32  | Enables real-time notifictions of newly started polls for all members. By clicking on "join poll" members are redirected to the poll page. The WebSocket-notificatoin appears on any page.|
 | **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
