@@ -473,6 +473,14 @@
 }
 
 .authButton {
+  height: 42px !important;
+  padding: 0 18px !important;
+  min-width: max-content !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
   border-radius: 999px !important;
   border: none !important;
   background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
@@ -504,6 +512,14 @@
 
 .uploadTriggerButton {
   margin-top: 16px;
+  height: 42px !important;
+  padding: 0 18px !important;
+  min-width: max-content !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
   background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
   border: none !important;
   color: #fff !important;
@@ -594,6 +610,14 @@
 }
 
 .modalCancelButton {
+  height: 42px !important;
+  padding: 0 18px !important;
+  min-width: max-content !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
   background: transparent !important;
   border: 1px solid rgba(255, 244, 235, 0.3) !important;
   color: #fff4eb !important;
@@ -606,6 +630,14 @@
 }
 
 .modalConfirmButton {
+  height: 42px !important;
+  padding: 0 18px !important;
+  min-width: max-content !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
   background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
   border: none !important;
   color: #fff !important;
@@ -1250,4 +1282,96 @@
   color: #8f6d60;
   font-size: 13px;
   margin: 0;
+}
+
+
+.pollNotification:global(.ant-notification-notice) {
+  border-radius: 22px !important;
+  border: 1px solid rgba(165, 42, 31, 0.22) !important;
+  background: linear-gradient(180deg, rgba(24, 20, 18, 0.96) 0%, rgba(16, 14, 13, 0.98) 100%) !important;
+  box-shadow: 0 14px 40px rgba(49, 15, 10, 0.18) !important;
+  padding: 18px 18px 16px !important;
+  overflow: hidden !important;
+}
+
+.pollNotification:global(.ant-notification-notice) :global(.ant-notification-notice-wrapper) {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.pollNotification:global(.ant-notification-notice) :global(.ant-notification-notice-body) {
+  margin-inline-start: 0 !important;
+}
+
+.pollNotification:global(.ant-notification-notice) :global(.ant-notification-notice-icon) {
+  color: #e24531 !important;
+  font-size: 22px !important;
+  margin-inline-end: 12px !important;
+  margin-top: 2px !important;
+}
+
+.pollNotification:global(.ant-notification-notice) :global(.ant-notification-notice-message) {
+  color: #fff4eb !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 6px !important;
+}
+
+.pollNotification:global(.ant-notification-notice) :global(.ant-notification-notice-description) {
+  color: #cbb6a4 !important;
+  font-size: 14px !important;
+  line-height: 1.45 !important;
+}
+
+.pollNotification:global(.ant-notification-notice) :global(.ant-notification-notice-close) {
+  color: #cbb6a4 !important;
+}
+
+.pollNotification:global(.ant-notification-notice) :global(.ant-notification-notice-close:hover) {
+  color: #fff4eb !important;
+  background: transparent !important;
+}
+
+.pollNotification:global(.ant-notification-notice) :global(.ant-notification-notice-actions) {
+  margin-top: 14px !important;
+}
+
+.pollNotificationButton {
+  height: 38px !important;
+  padding: 0 16px !important;
+  border-radius: 999px !important;
+  border: none !important;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18) !important;
+}
+
+.pollNotificationButton:hover,
+.pollNotificationButton:focus {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18), 0 0 20px rgba(178, 49, 35, 0.25) !important;
+}
+
+:global(.ant-notification) {
+  background: transparent !important;
+}
+
+:global(.ant-notification-notice-wrapper) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:global(.ant-notification-notice) {
+  background: transparent !important;
+}
+
+:global(.ant-notification-notice-content),
+:global(.ant-notification-notice-body),
+:global(.ant-notification-notice-inner) {
+  background: transparent !important;
 }
