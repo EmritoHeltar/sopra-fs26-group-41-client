@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Spin } from "antd";
-import { TeamOutlined, CopyOutlined, CheckOutlined, RiseOutlined } from "@ant-design/icons";
+import { TeamOutlined, CopyOutlined, CheckOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { ApiService } from "@/api/apiService";
 import { GroupDetails } from "@/types/group";
 import styles from "@/styles/page.module.css";
@@ -336,13 +336,12 @@ export default function GroupOverview() {
                   className={styles.authButton}
                   onClick={handleStartPoll}
                   loading={startingPoll}
-                  icon={<RiseOutlined />}
+                  icon={<PlayCircleOutlined />}
                 >
                   Start Poll
                 </Button>
               ) : (
                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <RiseOutlined className={styles.helperText} />
                   <span className={styles.helperText} style={{ fontSize: "12px" }}>
                     Only the group owner can start a poll
                   </span>
