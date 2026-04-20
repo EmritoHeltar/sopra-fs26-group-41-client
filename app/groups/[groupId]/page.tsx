@@ -29,6 +29,7 @@ export default function GroupOverview() {
 
   const [startingPoll, setStartingPoll] = useState(false);
   const [pollError, setPollError] = useState<string | null>(null);
+  const [isStartPollDialogOpen, setIsStartPollDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!groupId) return;
@@ -146,6 +147,8 @@ export default function GroupOverview() {
 
       const api = new ApiService();
       await api.post(`/groups/${groupId}/poll`);
+      setIsStartPollDialogOpen(false);
+      router.push(`/groups/${groupId}/poll`);
     } catch (error: unknown) {
       const status = (error as { status?: number }).status;
 
@@ -334,7 +337,10 @@ export default function GroupOverview() {
               {group.ownerId === currentUserId ? (
                 <Button
                   className={styles.authButton}
-                  onClick={handleStartPoll}
+                  onClick={() => {
+                    setPollError(null);
+                    setIsStartPollDialogOpen(true);
+                  }}
                   loading={startingPoll}
                   icon={<PlayCircleOutlined />}
                 >
@@ -395,6 +401,45 @@ export default function GroupOverview() {
           </div>
         </div>
       </div>
+
+      {isStartPollDialogOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => { if (!startingPoll) setIsStartPollDialogOpen(false); }}
+        >
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h3 className={styles.modalTitle}>Start poll?</h3>
+            <p className={styles.modalSubtitle}>
+              This will notify all group members that a poll has started so they can join and vote.
+            </p>
+
+            {pollError && (
+              <div className={styles.errorAlert}>
+                <p className={styles.warningText}>{pollError}</p>
+              </div>
+            )}
+
+            <div className={styles.modalActions}>
+              <Button
+                className={styles.modalCancelButton}
+                onClick={() => setIsStartPollDialogOpen(false)}
+                disabled={startingPoll}
+              >
+                Cancel
+              </Button>
+              <Button
+                className={styles.modalConfirmButton}
+                onClick={handleStartPoll}
+                disabled={startingPoll}
+                loading={startingPoll}
+                icon={<PlayCircleOutlined />}
+              >
+                Start Poll
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isLeaveDialogOpen && (
         <div
