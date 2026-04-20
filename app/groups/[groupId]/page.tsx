@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Spin } from "antd";
-import { TeamOutlined, CopyOutlined, CheckOutlined } from "@ant-design/icons";
+import { TeamOutlined, CopyOutlined, CheckOutlined, RiseOutlined } from "@ant-design/icons";
 import { ApiService } from "@/api/apiService";
 import { GroupDetails } from "@/types/group";
 import styles from "@/styles/page.module.css";
@@ -26,6 +26,9 @@ export default function GroupOverview() {
   const [recommendations, setRecommendations] = useState<unknown[]>([]);
   const [recommendationsLoading, setRecommendationsLoading] = useState<boolean>(true);
   const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+
+  const [startingPoll, setStartingPoll] = useState(false);
+  const [pollError, setPollError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!groupId) return;
@@ -99,7 +102,7 @@ export default function GroupOverview() {
     return () => {
       isMounted = false;
     };
-  }, [groupId]);
+  }, [groupId, router]);
 
   const joinToken = group?.joinUrl
     ? group.joinUrl.split("/").filter(Boolean).pop() ?? ""
@@ -133,6 +136,37 @@ export default function GroupOverview() {
       }
     } finally {
       setIsLeaving(false);
+    }
+  };
+
+  const handleStartPoll = async () => {
+    try {
+      setStartingPoll(true);
+      setPollError(null);
+
+      const api = new ApiService();
+      await api.post(`/groups/${groupId}/poll`);
+    } catch (error: unknown) {
+      const status = (error as { status?: number }).status;
+
+      if (status === 401) {
+        router.replace("/login");
+        return;
+      }
+
+      if (status === 403) {
+        setPollError("You are not allowed to start a poll for this group.");
+        return;
+      }
+
+      if (status === 409) {
+        setPollError("A poll is already running.");
+        return;
+      }
+
+      setPollError("Failed to start poll.");
+    } finally {
+      setStartingPoll(false);
     }
   };
 
@@ -172,10 +206,12 @@ export default function GroupOverview() {
       <div className={styles.content}>
         <div className={styles.hero}>
           <div className={styles.heroLeft}>
-            <div className={styles.brandRow}>
-              <img src="/logo.png" alt="logo" className={styles.logo} />
-              <h1 className={styles.brand}>Movieblendr.</h1>
-            </div>
+            <Link href="/users/me" style={{ textDecoration: "none", color: "inherit" }}>
+              <div className={styles.brandRow}>
+                <img src="/logo.png" alt="logo" className={styles.logo} />
+                <h1 className={styles.brand}>Movieblendr.</h1>
+              </div>
+            </Link>
           </div>
           <div className={styles.heroRight}>
             <Button className={styles.authButton} onClick={() => router.back()}>
@@ -282,7 +318,41 @@ export default function GroupOverview() {
 
         <div className={styles.section}>
           <div className={`${styles.shellCard} ${styles.softCard} ${styles.groupRecommendationsCard}`}>
-            <h2 className={styles.sectionTitle}>Group Recommendations</h2>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: "12px",
+              }}
+            >
+              <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+                Group Recommendations
+              </h2>
+
+              {group.ownerId === currentUserId ? (
+                <Button
+                  className={styles.authButton}
+                  onClick={handleStartPoll}
+                  loading={startingPoll}
+                  icon={<RiseOutlined />}
+                >
+                  Start Poll
+                </Button>
+              ) : (
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <RiseOutlined className={styles.helperText} />
+                  <span className={styles.helperText} style={{ fontSize: "12px" }}>
+                    Only the group owner can start a poll
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {pollError && (
+              <p className={styles.warningText}>{pollError}</p>
+            )}
 
             {recommendationsLoading ? (
               <div className={styles.groupRecommendationsLoading}>
