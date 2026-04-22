@@ -5,6 +5,7 @@ import { Button, notification } from "antd";
 import { RiseOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import styles from "@/styles/page.module.css";
+import { getApiDomain } from "@/utils/domain";
 
 type PollStartedEvent = {
   type: "poll";
@@ -64,7 +65,12 @@ export default function PollNotificationListener() {
 
     if (!token) return;
 
-    const socket = new WebSocket(`ws://localhost:8080/ws?token=${token}`);
+    const apiDomain = getApiDomain();
+    const wsBaseUrl = apiDomain
+      .replace(/^http:\/\//, "ws://")
+      .replace(/^https:\/\//, "wss://");
+
+    const socket = new WebSocket(`${wsBaseUrl}/ws?token=${token}`);
     socketRef.current = socket;
 
     socket.onmessage = (event) => {
