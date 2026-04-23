@@ -333,16 +333,10 @@ const Profile: React.FC = () => {
         </Card>
 
         <div className={styles.fabRow}>
-          <Tooltip
-            title={<span style={{ color: "#e2a684", fontSize: "11px", letterSpacing: "0.08em" }}>MY GROUPS</span>}
-            placement="bottom"
-            color="rgba(21, 18, 17, 0.96)"
-          >
-            <Button className={styles.groupsOverviewFab} onClick={() => router.push("/groups")}>
-              <TeamOutlined />
-              My Groups
-            </Button>
-          </Tooltip>
+          <Button className={styles.groupsOverviewFab} onClick={() => router.push("/groups")}>
+            <TeamOutlined />
+            My Groups
+          </Button>
           <Tooltip
             title={<span style={{ color: "#e2a684", fontSize: "11px", letterSpacing: "0.08em" }}>CREATE GROUP</span>}
             placement="bottom"
