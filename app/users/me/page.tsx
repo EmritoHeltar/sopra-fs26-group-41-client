@@ -340,6 +340,7 @@ const Profile: React.FC = () => {
           >
             <Button className={styles.groupsOverviewFab} onClick={() => router.push("/groups")}>
               <TeamOutlined />
+              My Groups
             </Button>
           </Tooltip>
           <Tooltip
