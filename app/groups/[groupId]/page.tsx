@@ -35,7 +35,7 @@ export default function GroupOverview() {
     const fetchGroupDetails = async () => {
       try {
         setLoading(true);
-        setRecommendationsLoading(true);
+        setRecommendationsLoading(false);
 
         const api = new ApiService();
         const data = await api.get<GroupDetails>(`/groups/${groupId}`);
@@ -43,6 +43,8 @@ export default function GroupOverview() {
         if (isMounted) {
           setGroup(data);
           setError(null);
+          setLoading(false);
+          setRecommendationsLoading(true);
         }
         try {
           const meData = await api.get<unknown>(`/users/me`);
@@ -64,17 +66,38 @@ export default function GroupOverview() {
           if (isMounted) {
             setRecommendations(recommendationData.recommendations ?? []);
             setRecommendationsError(null);
+            setRecommendationsLoading(false);
           }
-        } catch {
+        } catch (err: unknown) {
           if (isMounted) {
             setRecommendations([]);
-            setRecommendationsError(
-              "Recommendations will appear once at least one group member uploads Letterboxd data."
-            );
+            setRecommendationsLoading(false);
+
+            const apiError = err as { status?: number; message?: string };
+
+            if (apiError.status === 401) {
+              router.replace("/login");
+              return;
+            }
+
+            if (apiError.status === 403) {
+              setRecommendationsError("You are not allowed to view this group's recommendations.");
+            } else if (apiError.status === 409) {
+              setRecommendationsError(
+                apiError.message
+                ?? "Recommendations are not ready yet because not enough group members have uploaded Letterboxd data."
+              );
+            } else if (apiError.status === 404) {
+              setRecommendationsError("No recommendations found for this group.");
+            } else {
+              setRecommendationsError(apiError.message ?? "Failed to load recommendations.");
+            }
           }
         }
       } catch (err: unknown) {
         if (isMounted) {
+          setLoading(false);
+          setRecommendationsLoading(false);
           if ((err as { status?: number }).status === 401) {
             router.replace("/login");
             return;
@@ -87,9 +110,8 @@ export default function GroupOverview() {
           }
         }
       } finally {
-        if (isMounted) {
+        if (isMounted && !group) {
           setLoading(false);
-          setRecommendationsLoading(false);
         }
       }
     };
