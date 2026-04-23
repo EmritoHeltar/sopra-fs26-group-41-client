@@ -10,7 +10,6 @@ import styles from "../styles/page.module.css";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import Image from "next/image";
 
-const { Title } = Typography;
 
 const Register: React.FC = () => {
   const router = useRouter();
@@ -64,7 +63,7 @@ const Register: React.FC = () => {
               height={52}
               className={styles.logo}
             />
-            <Title className={styles.title}>Movieblendr.</Title>
+            <h1 className={styles.brand}>Movieblendr.</h1>
           </div>
         </Link>
         <Typography.Text type="secondary">

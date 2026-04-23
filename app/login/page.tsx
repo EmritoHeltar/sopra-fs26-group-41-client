@@ -6,7 +6,6 @@ import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { LoginRequest, LoginResponse } from "@/types/user";
 import { Button, Form, Input, Typography, Alert } from "antd";
-const { Title } = Typography;
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
@@ -65,9 +64,9 @@ const Login: React.FC = () => {
               height={52}
               className={styles.logo}
             />
-            <Title level={2} className={styles.title}>
+            <h1 className={styles.brand}>
               Movieblendr.
-            </Title>
+            </h1>
           </div>
         </Link>
         <Typography.Text type="secondary">
