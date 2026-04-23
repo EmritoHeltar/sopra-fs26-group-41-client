@@ -25,6 +25,24 @@ const JoinGroup: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [resolvedGroupUrl, setResolvedGroupUrl] = useState<string | null>(null);
 
+  const navigateToTarget = (target: string) => {
+    if (!target) return;
+
+    try {
+      const url = new URL(target, window.location.origin);
+      const isSameOrigin = url.origin === window.location.origin;
+
+      if (isSameOrigin) {
+        router.push(`${url.pathname}${url.search}${url.hash}`);
+        return;
+      }
+
+      window.location.assign(url.toString());
+    } catch {
+      router.push(target);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
 
@@ -45,14 +63,19 @@ const JoinGroup: React.FC = () => {
         const response = await apiService.post<JoinGroupResponse>(`/groups/join/${token}`);
         if (!isMounted) return;
 
-        const groupId = (response as JoinGroupResponse & { groupId?: number | string }).groupId;
-        const resolved = groupId ? `/groups/${groupId}` : "/users/me";
+        const joinResponse = response as JoinGroupResponse & {
+          groupId?: number | string;
+          groupUrl?: string;
+        };
+        const resolved = joinResponse.groupUrl
+          ?? (joinResponse.groupId ? `/groups/${joinResponse.groupId}` : null)
+          ?? "/users/me";
 
         setResolvedGroupUrl(resolved);
         setStatus("success");
 
         setTimeout(() => {
-          if (isMounted) router.push(resolved);
+          if (isMounted) navigateToTarget(resolved);
         }, 1500);
       } catch (err) {
         if (!isMounted) return;
@@ -63,7 +86,14 @@ const JoinGroup: React.FC = () => {
           clearToken();
           router.replace("/login");
         } else if (error.status === 403) {
-          setErrorMessage(error.message ?? "You are already a member of this group.");
+          const alreadyMemberError = error as {
+            status?: number;
+            message?: string;
+            groupUrl?: string;
+          };
+
+          setResolvedGroupUrl(alreadyMemberError.groupUrl ?? null);
+          setErrorMessage(alreadyMemberError.message ?? "You are already a member of this group.");
           setStatus("alreadyMember");
         } else if (error.status === 404) {
           setStatus("invalidToken");
@@ -103,7 +133,7 @@ const JoinGroup: React.FC = () => {
             <div className={styles.joinActionWrap}>
               <Button
                 className={styles.createGroupSubmit}
-                onClick={() => router.push(resolvedGroupUrl)}
+                onClick={() => navigateToTarget(resolvedGroupUrl)}
               >
                 Go to Group
               </Button>
@@ -126,9 +156,9 @@ const JoinGroup: React.FC = () => {
           <div className={styles.joinActionWrap}>
             <Button
               className={styles.createGroupSubmit}
-              onClick={() => router.push("/users/me")}
+              onClick={() => navigateToTarget(resolvedGroupUrl ?? "/users/me")}
             >
-              Go to my profile
+              {resolvedGroupUrl ? "Go to Group" : "Go to my profile"}
             </Button>
           </div>
         </>
@@ -147,7 +177,7 @@ const JoinGroup: React.FC = () => {
           <div className={styles.joinActionWrap}>
             <Button
               className={styles.createGroupSubmit}
-              onClick={() => router.push("/users/me")}
+              onClick={() => navigateToTarget("/users/me")}
             >
               Go home
             </Button>
@@ -167,7 +197,7 @@ const JoinGroup: React.FC = () => {
         <div className={styles.joinActionWrap}>
           <Button
             className={styles.createGroupSubmit}
-            onClick={() => router.push("/users/me")}
+            onClick={() => navigateToTarget("/users/me")}
           >
             Go home
           </Button>
