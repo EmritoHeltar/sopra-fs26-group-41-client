@@ -61,3 +61,22 @@ a {
   background-color: rgb(41, 44, 59);
 }
 
+.ant-notification {
+  background: transparent !important;
+}
+
+.ant-notification-notice-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.ant-notification-notice {
+  background: transparent !important;
+}
+
+.ant-notification-notice-content,
+.ant-notification-notice-body,
+.ant-notification-notice-inner {
+  background: transparent !important;
+}
+

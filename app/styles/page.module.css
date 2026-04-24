@@ -1357,24 +1357,6 @@
   box-shadow: 0 8px 18px rgba(120, 34, 20, 0.18), 0 0 20px rgba(178, 49, 35, 0.25) !important;
 }
 
-:global(.ant-notification) {
-  background: transparent !important;
-}
-
-:global(.ant-notification-notice-wrapper) {
-  background: transparent !important;
-  box-shadow: none !important;
-}
-
-:global(.ant-notification-notice) {
-  background: transparent !important;
-}
-
-:global(.ant-notification-notice-content),
-:global(.ant-notification-notice-body),
-:global(.ant-notification-notice-inner) {
-  background: transparent !important;
-}
 
 .pollStateCard {
   padding: 56px 40px;
