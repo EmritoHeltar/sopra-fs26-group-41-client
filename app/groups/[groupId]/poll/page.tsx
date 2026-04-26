@@ -38,6 +38,9 @@ export default function PollPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [votes, setVotes] = useState<Record<string, boolean>>({});
   const [showReview, setShowReview] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     if (!groupId) return;
@@ -180,6 +183,44 @@ export default function PollPage() {
   const totalMovies = movies.length;
   const votedCount = Object.keys(votes).length;
 
+  const allAnswered = movies.every((m) => votes[m.movieId] !== undefined);
+
+  const handleSubmit = async () => {
+    if (!allAnswered || submitting) return;
+
+    const payload = {
+      votes: movies.map((m) => ({ movieId: m.movieId, interested: votes[m.movieId] })),
+    };
+
+    try {
+      setSubmitting(true);
+      setSubmitError(null);
+      const api = new ApiService();
+      await api.post(`/groups/${groupId}/vote`, payload);
+      setSubmitted(true);
+      router.push(backToGroup);
+    } catch (err: unknown) {
+      const status = (err as { status?: number }).status;
+      if (status === 409) {
+        const info = (err as { info?: string }).info;
+        let reason: string | null = null;
+        if (info) {
+          try {
+            const parsed = JSON.parse(info) as { reason?: string };
+            reason = parsed.reason ?? null;
+          } catch {}
+        }
+        setSubmitError(reason ?? "The poll is closed or you have already submitted your answers.");
+      } else if (err instanceof Error) {
+        setSubmitError(err.message);
+      } else {
+        setSubmitError("Submission failed. Please try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleVote = (movieId: string, interested: boolean) => {
     const updatedVotes = { ...votes, [movieId]: interested };
     setVotes(updatedVotes);
@@ -235,12 +276,24 @@ export default function PollPage() {
             </div>
 
             <div className={styles.pollSubmitArea}>
-              <Button className={styles.authButton} disabled style={{ opacity: 0.45 }}>
+              {submitError && (
+                <p className={styles.warningText} style={{ textAlign: "center", marginBottom: 12 }}>
+                  {submitError}
+                </p>
+              )}
+              <Button
+                className={styles.authButton}
+                onClick={handleSubmit}
+                disabled={!allAnswered || submitting}
+                loading={submitting}
+              >
                 Submit votes
               </Button>
-              <p className={styles.helperText} style={{ textAlign: "center", fontSize: 13 }}>
-                Submitting votes will be implemented in a separate issue.
-              </p>
+              {!allAnswered && (
+                <p className={styles.helperText} style={{ textAlign: "center", fontSize: 13 }}>
+                  Answer all movies to enable submission.
+                </p>
+              )}
             </div>
           </div>
         </div>
