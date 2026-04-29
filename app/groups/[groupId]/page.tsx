@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Spin } from "antd";
-import { TeamOutlined, CopyOutlined, CheckOutlined } from "@ant-design/icons";
+import { TeamOutlined, CopyOutlined, CheckOutlined, UserOutlined } from "@ant-design/icons";
 import { ApiService } from "@/api/apiService";
 import { GroupDetails } from "@/types/group";
 import styles from "@/styles/page.module.css";
+import { PollResultMovie, PollResultsResponse } from "@/types/poll";
 
 export default function GroupOverview() {
   const params = useParams();
@@ -26,6 +27,11 @@ export default function GroupOverview() {
   const [recommendations, setRecommendations] = useState<unknown[]>([]);
   const [recommendationsLoading, setRecommendationsLoading] = useState<boolean>(true);
   const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+
+  const [pollResults, setPollResults] = useState<PollResultMovie[]>([]);
+  const [pollResultsLoading, setPollResultsLoading] = useState<boolean>(false);
+  const [pollResultsError, setPollResultsError] = useState<string | null>(null);
+  const USE_POLL_RESULTS_MOCK = true;
 
   useEffect(() => {
     if (!groupId) return;
@@ -92,6 +98,58 @@ export default function GroupOverview() {
             } else {
               setRecommendationsError(apiError.message ?? "Failed to load recommendations.");
             }
+          }
+        }
+
+        try {
+          if (USE_POLL_RESULTS_MOCK) {
+            if (isMounted) {
+              setPollResults([
+                { movieId: "tt0111161", title: "The Shawshank Redemption", votes: 5 },
+                { movieId: "tt0068646", title: "The Godfather", votes: 4 },
+                { movieId: "tt0468569", title: "The Dark Knight", votes: 3 },
+              ]);
+              setPollResultsError(null);
+              setPollResultsLoading(false);
+            }
+
+            return;
+          }
+
+          if (isMounted) {
+            setPollResultsLoading(true);
+          }
+
+          const resultsData = await api.get<PollResultsResponse>(`/groups/${groupId}/results`);
+
+          if (isMounted) {
+            setPollResults(resultsData.topMovies ?? []);
+            setPollResultsError(null);
+          }
+        } catch (err: unknown) {
+          if (isMounted) {
+            const apiError = err as { status?: number; message?: string };
+
+            setPollResults([]);
+
+            if (apiError.status === 401) {
+              router.replace("/login");
+              return;
+            }
+
+            if (apiError.status === 403) {
+              setPollResultsError("You are not allowed to view this group's poll results.");
+            } else if (apiError.status === 409) {
+              setPollResultsError("Poll results will appear once the poll has finished.");
+            } else if (apiError.status === 404) {
+              setPollResultsError("No poll results found yet.");
+            } else {
+              setPollResultsError(apiError.message ?? "Failed to load poll results.");
+            }
+          }
+        } finally {
+          if (isMounted) {
+            setPollResultsLoading(false);
           }
         }
       } catch (err: unknown) {
@@ -347,45 +405,65 @@ export default function GroupOverview() {
             )}
           </div>
         </div>
-      </div>
+        <div className={styles.section}>
+          <div className={`${styles.shellCard} ${styles.softCard} ${styles.groupRecommendationsCard}`}>
+            <div className={styles.groupSectionHeader}>
+              <h2 className={styles.sectionTitle}>Poll Results</h2>
+              <p className={styles.helperText}>
+                {currentUserId === group.ownerId
+                  ? "Poll creation is handled in the poll branch."
+                  : "Only the group owner can start a poll."}
+              </p>
+            </div>
 
-      {isLeaveDialogOpen && (
-        <div
-          className={styles.modalOverlay}
-          onClick={() => { if (!isLeaving) setIsLeaveDialogOpen(false); }}
-        >
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.modalTitle}>Leave group?</h3>
-            <p className={styles.modalSubtitle}>
-              Are you sure you want to leave <strong>{group.name}</strong>? You will need a new invite link to rejoin.
-            </p>
+            {pollResultsLoading ? (
+              <div className={styles.groupRecommendationsLoading}>
+                <Spin size="large" />
+                <p className={styles.groupRecommendationsLoadingText}>
+                  Loading poll results...
+                </p>
+              </div>
+            ) : pollResultsError ? (
+              <p className={styles.helperText}>{pollResultsError}</p>
+            ) : pollResults.length === 0 ? (
+              <p className={styles.helperText}>No poll results available yet.</p>
+            ) : (
+              <div className={styles.groupRecommendationsList}>
+                {pollResults.slice(0, 3).map((movie, index) => (
+                  <Link
+                    key={movie.movieId}
+                    href={`/movies/${movie.movieId}`}
+                    className={styles.groupRecommendationLink}
+                  >
+                    <div className={`${styles.softCard} ${styles.groupRecommendationItem} ${styles.pollResultItemCompact}`}>
+                      <div
+                        className={`${styles.pollResultRankCompact} ${index === 0
+                          ? styles.pollResultRankGold
+                          : index === 1
+                            ? styles.pollResultRankSilver
+                            : styles.pollResultRankBronze
+                          }`}
+                      >
+                        {index + 1}
+                      </div>
 
-            {leaveError && (
-              <div className={styles.errorAlert}>
-                <p className={styles.warningText}>{leaveError}</p>
+                      <div className={styles.pollResultInfoCompact}>
+                        <p className={styles.groupRecommendationTitle}>{movie.title}</p>
+                      </div>
+
+                      <div className={styles.pollResultVotesCompact}>
+                        {movie.votes > 1 && <TeamOutlined />}
+                        {movie.votes === 1 && <UserOutlined />}
+                        <span>{movie.votes} vote{movie.votes !== 1 ? "s" : ""}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
               </div>
             )}
-
-            <div className={styles.modalActions}>
-              <Button
-                className={styles.modalCancelButton}
-                onClick={() => setIsLeaveDialogOpen(false)}
-                disabled={isLeaving}
-              >
-                Cancel
-              </Button>
-              <Button
-                className={styles.modalConfirmButton}
-                onClick={handleLeaveGroup}
-                disabled={isLeaving}
-                loading={isLeaving}
-              >
-                Leave group
-              </Button>
-            </div>
           </div>
         </div>
-      )}
+      </div>
     </main>
   );
 }
