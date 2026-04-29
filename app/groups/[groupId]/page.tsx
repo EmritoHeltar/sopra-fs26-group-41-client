@@ -31,7 +31,6 @@ export default function GroupOverview() {
   const [pollResults, setPollResults] = useState<PollResultMovie[]>([]);
   const [pollResultsLoading, setPollResultsLoading] = useState<boolean>(false);
   const [pollResultsError, setPollResultsError] = useState<string | null>(null);
-  const USE_POLL_RESULTS_MOCK = true;
 
   useEffect(() => {
     if (!groupId) return;
@@ -102,20 +101,6 @@ export default function GroupOverview() {
         }
 
         try {
-          if (USE_POLL_RESULTS_MOCK) {
-            if (isMounted) {
-              setPollResults([
-                { movieId: "tt0111161", title: "The Shawshank Redemption", votes: 5 },
-                { movieId: "tt0068646", title: "The Godfather", votes: 4 },
-                { movieId: "tt0468569", title: "The Dark Knight", votes: 3 },
-              ]);
-              setPollResultsError(null);
-              setPollResultsLoading(false);
-            }
-
-            return;
-          }
-
           if (isMounted) {
             setPollResultsLoading(true);
           }
