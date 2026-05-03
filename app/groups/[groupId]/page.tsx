@@ -146,7 +146,8 @@ export default function GroupOverview() {
 
     try {
       const api = new ApiService();
-      await api.post<DrawingJoinResponse>(`/groups/${groupId}/drawing/join`);
+      const response = await api.post<DrawingJoinResponse>(`/groups/${groupId}/drawing/join`);
+      router.push(`/groups/${groupId}/canvas?sessionId=${encodeURIComponent(response.sessionId)}`);
     } catch (err: unknown) {
       const apiError = err as { status?: number; message?: string };
       if (apiError.status === 401) {
