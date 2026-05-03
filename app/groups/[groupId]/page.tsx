@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button, Spin } from "antd";
 import { TeamOutlined, CopyOutlined, CheckOutlined } from "@ant-design/icons";
 import { ApiService } from "@/api/apiService";
-import { GroupDetails } from "@/types/group";
+import { GroupDetails, DrawingJoinResponse } from "@/types/group";
 import styles from "@/styles/page.module.css";
 
 export default function GroupOverview() {
@@ -26,6 +26,9 @@ export default function GroupOverview() {
   const [recommendations, setRecommendations] = useState<unknown[]>([]);
   const [recommendationsLoading, setRecommendationsLoading] = useState<boolean>(true);
   const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+
+  const [joiningDrawingSession, setJoiningDrawingSession] = useState<boolean>(false);
+  const [drawingJoinError, setDrawingJoinError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!groupId) return;
@@ -136,6 +139,26 @@ export default function GroupOverview() {
     }
   };
 
+  const handleJoinDrawingSession = async () => {
+    if (joiningDrawingSession) return;
+    setJoiningDrawingSession(true);
+    setDrawingJoinError(null);
+
+    try {
+      const api = new ApiService();
+      await api.post<DrawingJoinResponse>(`/groups/${groupId}/drawing/join`);
+    } catch (err: unknown) {
+      const apiError = err as { status?: number; message?: string };
+      if (apiError.status === 401) {
+        router.replace("/login");
+        return;
+      }
+      setDrawingJoinError(apiError.message ?? "Failed to join drawing session.");
+    } finally {
+      setJoiningDrawingSession(false);
+    }
+  };
+
   const owner = group?.members.find((member) => member.id === group.ownerId);
 
   const groupMatchReason = group && group.members.length < 2
@@ -194,7 +217,11 @@ export default function GroupOverview() {
           <div className={`${styles.shellCard} ${styles.softCard} ${styles.groupInviteCard}`}>
             <div className={styles.groupSummaryLayout}>
               <div className={styles.groupSummaryMain}>
-                <div className={styles.groupProfilePictureWrap}>
+                <div
+                  className={styles.groupProfilePictureWrap}
+                  onClick={handleJoinDrawingSession}
+                  style={{ opacity: joiningDrawingSession ? 0.6 : 1 }}
+                >
                   {group.groupProfilePicture ? (
                     <img
                       src={group.groupProfilePicture}
@@ -207,9 +234,14 @@ export default function GroupOverview() {
                     </div>
                   )}
                   <div className={styles.groupProfilePictureOverlay}>
-                    <span>Click to edit</span>
+                    <span>{joiningDrawingSession ? "Joining..." : "Click to edit"}</span>
                   </div>
                 </div>
+                {drawingJoinError && (
+                  <p className={styles.helperText} style={{ color: "#e2a684", marginBottom: 8 }}>
+                    {drawingJoinError}
+                  </p>
+                )}
 
                 <h2 className={`${styles.username} ${styles.groupSummaryTitle}`}>
                   {group.name}
