@@ -194,6 +194,23 @@ export default function GroupOverview() {
           <div className={`${styles.shellCard} ${styles.softCard} ${styles.groupInviteCard}`}>
             <div className={styles.groupSummaryLayout}>
               <div className={styles.groupSummaryMain}>
+                <div className={styles.groupProfilePictureWrap}>
+                  {group.groupProfilePicture ? (
+                    <img
+                      src={group.groupProfilePicture}
+                      alt="Group profile picture"
+                      className={styles.groupProfilePicture}
+                    />
+                  ) : (
+                    <div className={styles.groupProfilePictureFallback}>
+                      <span>No picture</span>
+                    </div>
+                  )}
+                  <div className={styles.groupProfilePictureOverlay}>
+                    <span>Click to edit</span>
+                  </div>
+                </div>
+
                 <h2 className={`${styles.username} ${styles.groupSummaryTitle}`}>
                   {group.name}
                 </h2>
