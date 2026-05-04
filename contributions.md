@@ -113,6 +113,36 @@ reason).
 
 | **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
+| **@fly-die** | 29.04.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/1c1a5bb13b86e377499d1f31bac2c833e391652e] | After a poll ends, the group page now displays the poll results #36 | Displays final group decision, making poll outcomes visible and usable |
+| **@fly-die** | 29.04.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/5b61bb5458232e2b9f110bf0326f5c9ed7b8305c] | When inspecting a user, you see relevant information such as overlap and stats #43 | Improves the group feature and adds a comparison feature within groups (you could e.g. see who your best match is) |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+
+---
+
+## Contributions Week 6 - [04.05.2026] to [10.05.2026]
+
+| **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
+| ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
+| **@fly-die** | 04.05.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/f23bad5ab32daeab03b5c3a9b3aac1fa1b1a1b0b] | Show drawing-start notification and redirect to canvas #38 | Enables real-time notifs and participation in drawing sessions |
+| **@fly-die** | 04.05.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/4e34e39332c7863f286b5d27f4ba7d766a81ad00] | Display incoming drawing strokes via WebSocket #40 | Allows users to see others’ drawing in real time |
+| **@fly-die** | 04.05.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/0c2b8d1663853cff3c87d21b35f355688ca699c3] | Send own drawing strokes via WebSocket #41 | Enables collaborative drawing by tracking user input |
+| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+
+---
+
+## Contributions Week 6 - [11.05.2026] to [17.05.2026]
+
+| **Student**        | **Date** | **Link to Commit** | **Description**                 | **Relevance**                       |
+| ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
 | **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username1** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
@@ -121,4 +151,5 @@ reason).
 | **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+
 
