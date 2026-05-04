@@ -99,23 +99,6 @@ export default function CanvasPage() {
                 Session: {sessionId}
               </p>
             )}
-            <Button
-              onClick={() => {
-                setStrokes((prev) => [
-                  ...prev,
-                  {
-                    strokeId: crypto.randomUUID(),
-                    userId: 2,
-                    color: "#000",
-                    width: 2,
-                    points: [[1, 1], [2, 2], [3, 3]],
-                  },
-                ]);
-              }}
-            >
-              Add Test Stroke
-            </Button>
-
             <div style={{ marginTop: 24, textAlign: "left" }}>
               {strokes.map((stroke) => (
                 <div key={stroke.strokeId} style={{ marginBottom: 8 }}>
