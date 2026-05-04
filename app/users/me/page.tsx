@@ -14,16 +14,6 @@ import Link from "next/link";
 const { Title, Text } = Typography;
 const { Search } = Input;
 
-const mockProfile: MyProfile = {
-  id: 0,
-  username: "User",
-  hasLetterboxdData: false,
-  stats: {
-    moviesLogged: 0,
-    highlyRatedMovies: 0,
-    topGenres: [],
-  },
-};
 
 const Profile: React.FC = () => {
   const router = useRouter();
@@ -41,11 +31,17 @@ const Profile: React.FC = () => {
 
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resetFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleOpenDialog = () => {
     setIsUploadDialogOpen(true);
     setUploadError(null);
     setSelectedFile(null);
+    resetFileInput();
   };
 
   const handleCloseDialog = () => {
@@ -53,6 +49,7 @@ const Profile: React.FC = () => {
     setIsUploadDialogOpen(false);
     setUploadError(null);
     setSelectedFile(null);
+    resetFileInput();
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,13 +65,13 @@ const Profile: React.FC = () => {
   };
 
   const handleSearch = () => {
-    const trimmedQuery = searchQuery.trim();
+    const submittedQuery = searchQuery.trim();
 
-    if (!trimmedQuery) {
+    if (!submittedQuery) {
       return;
     }
 
-    router.push(`/search?query=${encodeURIComponent(trimmedQuery)}`);
+    router.push(`/search?query=${encodeURIComponent(submittedQuery)}`);
   };
 
   const handleLogout = async () => {
@@ -113,7 +110,9 @@ const Profile: React.FC = () => {
       setError(null);
       setSelectedFile(null);
       setIsUploadDialogOpen(false);
+      resetFileInput();
     } catch (err) {
+      resetFileInput();
       if (err instanceof Error) {
         setUploadError(err.message);
       } else {
@@ -134,6 +133,8 @@ const Profile: React.FC = () => {
       const token = localStorage.getItem("token");
 
       if (!token) {
+        setIsLoading(false);
+        clearToken();
         router.replace("/login");
         return;
       }
@@ -155,21 +156,32 @@ const Profile: React.FC = () => {
         setProfile(safeProfile);
         setError(null);
       } catch (err) {
-        if (err instanceof Error) {
-          const status = (err as { status?: number }).status;
+        const status =
+          (err as { status?: number; response?: { status?: number } })?.status ??
+          (err as { response?: { status?: number } })?.response?.status;
 
-          if (status === 400 || status === 401 || status === 403) {
-            clearToken();
-            router.replace("/login");
-            return;
-          } else {
-            setProfile(mockProfile);
-            setError("Showing default data (backend not ready yet)");
-          }
-        } else {
-          setProfile(mockProfile);
-          setError("Using fallback data");
+        if (status === 401 || status === 403) {
+          clearToken();
+          router.replace("/login");
+          return;
         }
+
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Failed to load profile.");
+        }
+
+        setProfile({
+          id: 0,
+          username: "User",
+          hasLetterboxdData: false,
+          stats: {
+            moviesLogged: 0,
+            highlyRatedMovies: 0,
+            topGenres: [],
+          },
+        });
       } finally {
         setIsLoading(false);
       }
