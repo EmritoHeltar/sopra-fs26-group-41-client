@@ -244,6 +244,7 @@ export default function GroupOverview() {
     ? "Need at least 2 members to compare taste profiles."
     : "No group match yet because not enough members have uploaded Letterboxd data.";
 
+
   if (loading) {
     return (
       <main className={styles.page}>
@@ -393,6 +394,7 @@ export default function GroupOverview() {
                 justifyContent: "space-between",
                 alignItems: "center",
                 gap: "12px",
+                marginBottom: "18px",
               }}
             >
               <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
