@@ -1316,6 +1316,62 @@
   margin: 0;
 }
 
+.pollResultItemCompact {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.pollResultRankCompact {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111827;
+  font-weight: 800;
+}
+
+.pollResultRankGold {
+  background: #ffc247;
+}
+
+.pollResultRankSilver {
+  background: #a8b3c4;
+}
+
+.pollResultRankBronze {
+  background: #d07a24;
+}
+
+.pollResultInfoCompact {
+  min-width: 0;
+}
+
+.pollResultVotesCompact {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  color: inherit;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .pollResultItemCompact {
+    grid-template-columns: auto 1fr;
+  }
+
+  .pollResultVotesCompact {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+}
+
 
 .pollNotification:global(.ant-notification-notice) {
   border-radius: 22px !important;

@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Spin } from "antd";
-import { TeamOutlined, CopyOutlined, CheckOutlined, PlayCircleOutlined } from "@ant-design/icons";
+import { TeamOutlined, CopyOutlined, CheckOutlined, UserOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { ApiService } from "@/api/apiService";
 import { GroupDetails } from "@/types/group";
 import styles from "@/styles/page.module.css";
+import { PollResultMovie, PollResultsResponse } from "@/types/poll";
 
 export default function GroupOverview() {
   const params = useParams();
@@ -26,6 +27,10 @@ export default function GroupOverview() {
   const [recommendations, setRecommendations] = useState<unknown[]>([]);
   const [recommendationsLoading, setRecommendationsLoading] = useState<boolean>(true);
   const [recommendationsError, setRecommendationsError] = useState<string | null>(null);
+
+  const [pollResults, setPollResults] = useState<PollResultMovie[]>([]);
+  const [pollResultsLoading, setPollResultsLoading] = useState<boolean>(false);
+  const [pollResultsError, setPollResultsError] = useState<string | null>(null);
 
   const [startingPoll, setStartingPoll] = useState(false);
   const [pollError, setPollError] = useState<string | null>(null);
@@ -96,6 +101,44 @@ export default function GroupOverview() {
             } else {
               setRecommendationsError(apiError.message ?? "Failed to load recommendations.");
             }
+          }
+        }
+
+        try {
+          if (isMounted) {
+            setPollResultsLoading(true);
+          }
+
+          const resultsData = await api.get<PollResultsResponse>(`/groups/${groupId}/results`);
+
+          if (isMounted) {
+            setPollResults(resultsData.topMovies ?? []);
+            setPollResultsError(null);
+          }
+        } catch (err: unknown) {
+          if (isMounted) {
+            const apiError = err as { status?: number; message?: string };
+
+            setPollResults([]);
+
+            if (apiError.status === 401) {
+              router.replace("/login");
+              return;
+            }
+
+            if (apiError.status === 403) {
+              setPollResultsError("You are not allowed to view this group's poll results.");
+            } else if (apiError.status === 409) {
+              setPollResultsError("Poll results will appear once the poll has finished.");
+            } else if (apiError.status === 404) {
+              setPollResultsError("No poll results found yet.");
+            } else {
+              setPollResultsError(apiError.message ?? "Failed to load poll results.");
+            }
+          }
+        } finally {
+          if (isMounted) {
+            setPollResultsLoading(false);
           }
         }
       } catch (err: unknown) {
@@ -422,6 +465,65 @@ export default function GroupOverview() {
             )}
           </div>
         </div>
+        <div className={styles.section}>
+          <div className={`${styles.shellCard} ${styles.softCard} ${styles.groupRecommendationsCard}`}>
+            <div className={styles.groupSectionHeader}>
+              <h2 className={styles.sectionTitle}>Poll Results</h2>
+              <p className={styles.helperText}>
+                {currentUserId === group.ownerId
+                  ? "Poll creation is handled in the poll branch."
+                  : "Only the group owner can start a poll."}
+              </p>
+            </div>
+
+
+            {pollResultsLoading ? (
+              <div className={styles.groupRecommendationsLoading}>
+                <Spin size="large" />
+                <p className={styles.groupRecommendationsLoadingText}>
+                  Loading poll results...
+                </p>
+              </div>
+            ) : pollResultsError ? (
+              <p className={styles.helperText}>{pollResultsError}</p>
+            ) : pollResults.length === 0 ? (
+              <p className={styles.helperText}>No poll results available yet.</p>
+            ) : (
+              <div className={styles.groupRecommendationsList}>
+                {pollResults.slice(0, 3).map((movie, index) => (
+                  <Link
+                    key={movie.movieId}
+                    href={`/movies/${movie.movieId}`}
+                    className={styles.groupRecommendationLink}
+                  >
+                    <div className={`${styles.softCard} ${styles.groupRecommendationItem} ${styles.pollResultItemCompact}`}>
+                      <div
+                        className={`${styles.pollResultRankCompact} ${index === 0
+                          ? styles.pollResultRankGold
+                          : index === 1
+                            ? styles.pollResultRankSilver
+                            : styles.pollResultRankBronze
+                          }`}
+                      >
+                        {index + 1}
+                      </div>
+
+                      <div className={styles.pollResultInfoCompact}>
+                        <p className={styles.groupRecommendationTitle}>{movie.title}</p>
+                      </div>
+
+                      <div className={styles.pollResultVotesCompact}>
+                        {movie.votes > 1 && <TeamOutlined />}
+                        {movie.votes === 1 && <UserOutlined />}
+                        <span>{movie.votes} vote{movie.votes !== 1 ? "s" : ""}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {isStartPollDialogOpen && (
@@ -471,7 +573,7 @@ export default function GroupOverview() {
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h3 className={styles.modalTitle}>Leave group?</h3>
             <p className={styles.modalSubtitle}>
-              Are you sure you want to leave <strong>{group.name}</strong>? You will need a new invite link to rejoin.
+              You will be removed from this group and redirected back to your profile.
             </p>
 
             {leaveError && (
@@ -494,7 +596,7 @@ export default function GroupOverview() {
                 disabled={isLeaving}
                 loading={isLeaving}
               >
-                Leave group
+                Leave Group
               </Button>
             </div>
           </div>
