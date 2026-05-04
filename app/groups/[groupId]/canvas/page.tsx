@@ -31,6 +31,20 @@ export default function CanvasPage() {
   const [strokes, setStrokes] = useState<DrawingStroke[]>([]);
   const socketRef = useRef<WebSocket | null>(null);
 
+  const sendStroke = (stroke: DrawingStroke) => {
+    if (!sessionId) return;
+    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) return;
+
+    socketRef.current.send(
+      JSON.stringify({
+        type: "drawing",
+        event: "stroke",
+        sessionId,
+        stroke,
+      })
+    );
+  };
+
   useEffect(() => {
     if (!sessionId) return;
 
