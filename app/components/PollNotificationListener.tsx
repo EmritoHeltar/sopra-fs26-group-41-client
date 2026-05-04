@@ -1,10 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
-import { Button, notification } from "antd";
-import { RiseOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
-import styles from "@/styles/page.module.css";
+import React, { useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { App, Button } from "antd";
 import { getApiDomain } from "@/utils/domain";
 
 type PollStartedEvent = {
@@ -14,83 +12,118 @@ type PollStartedEvent = {
   url?: string;
 };
 
+type PollFinishedEvent = {
+  type: "poll";
+  event: "finished";
+  pollId?: number;
+  groupId?: number;
+  pollResultsUrl?: string;
+};
+
+type PollWebSocketEvent = PollStartedEvent | PollFinishedEvent;
+
+function getWsDomain(): string {
+  return getApiDomain().replace(/^http/, "ws");
+}
+
 export default function PollNotificationListener() {
   const router = useRouter();
-  const [api, contextHolder] = notification.useNotification();
-  const socketRef = useRef<WebSocket | null>(null);
-  const hasInitializedRef = useRef(false);
+  const pathname = usePathname();
+  const { notification } = App.useApp();
 
-  const showPollStartedNotification = useCallback(
-    (description: string, url?: string) => {
-      api.info({
-        title: "Poll started",
-        description,
-        placement: "topRight",
-        duration: 15,
-        icon: <RiseOutlined />,
-        className: styles.pollNotification,
-        style: {
-          padding: 0,
-          background: "transparent",
-          boxShadow: "none",
-          border: "none",
-        },
-        actions: (
-          <Button
-            size="small"
-            type="primary"
-            className={styles.pollNotificationButton}
-            onClick={() => {
-              api.destroy();
-              if (url) {
-                router.push(url);
-              }
-            }}
-          >
-            Join Poll
-          </Button>
-        ),
-      });
-    },
-    [api, router],
-  );
+  const routerRef = useRef(router);
+  const notificationRef = useRef(notification);
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    if (hasInitializedRef.current) {
-      return;
+    routerRef.current = router;
+  }, [router]);
+
+  useEffect(() => {
+    notificationRef.current = notification;
+  }, [notification]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if (socketRef.current) {
+      socketRef.current.close();
+      socketRef.current = null;
     }
-    hasInitializedRef.current = true;
 
     const token = localStorage.getItem("token");
-
     if (!token) return;
 
-    const apiDomain = getApiDomain();
-    const wsBaseUrl = apiDomain
-      .replace(/^http:\/\//, "ws://")
-      .replace(/^https:\/\//, "wss://");
-
-    const socket = new WebSocket(`${wsBaseUrl}/ws?token=${token}`);
+    const socket = new WebSocket(
+      `${getWsDomain()}/ws?token=${encodeURIComponent(token)}`,
+    );
     socketRef.current = socket;
 
-    socket.onmessage = (event) => {
+    socket.onmessage = (messageEvent) => {
       try {
-        const data: unknown = JSON.parse(event.data);
+        if (typeof messageEvent.data !== "string") return;
 
-        if (
-          typeof data === "object" &&
-          data !== null &&
-          (data as PollStartedEvent).type === "poll" &&
-          (data as PollStartedEvent).event === "started"
-        ) {
-          const pollEvent = data as PollStartedEvent;
+        const data = JSON.parse(messageEvent.data) as PollWebSocketEvent;
+        if (data.type !== "poll") return;
 
-          showPollStartedNotification(
-            pollEvent.message ?? "A new poll has started.",
-            pollEvent.url,
-          );
+        const api = notificationRef.current;
+        const nav = routerRef.current;
+
+        if (data.event === "started") {
+          const url = typeof data.url === "string" ? data.url.trim() : "";
+
+          api.info({
+            title: "Poll started",
+            description: data.message ?? "A new poll has started for your group.",
+            duration: 0,
+            btn: url ? (
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => {
+                  api.destroy();
+                  nav.push(url);
+                }}
+              >
+                Join Poll
+              </Button>
+            ) : undefined,
+          });
+        }
+
+        if (data.event === "finished") {
+          let redirectUrl: string | null = null;
+
+          if (typeof data.pollResultsUrl === "string" && data.pollResultsUrl.trim()) {
+            redirectUrl = data.pollResultsUrl.trim();
+          } else if (typeof data.groupId === "number") {
+            redirectUrl = `/groups/${data.groupId}`;
+          }
+
+          if (!redirectUrl) return;
+
+          const finalUrl = redirectUrl;
+
+          api.info({
+            title: "Poll finished",
+            description: "The group poll has finished. See what your group picked.",
+            duration: 0,
+            btn: (
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => {
+                  api.destroy();
+                  nav.push(finalUrl);
+                }}
+              >
+                View Results
+              </Button>
+            ),
+          });
         }
       } catch {
+        // Ignore malformed websocket messages.
       }
     };
 
@@ -102,7 +135,7 @@ export default function PollNotificationListener() {
       socket.close();
       socketRef.current = null;
     };
-  }, [showPollStartedNotification]);
+  }, [pathname]);
 
-  return <>{contextHolder}</>;
+  return null;
 }
