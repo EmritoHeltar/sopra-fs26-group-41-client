@@ -1,8 +1,25 @@
 "use client";
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { getApiDomain } from "@/utils/domain";
 import { Button } from "antd";
 import styles from "@/styles/page.module.css";
+
+type DrawingStroke = {
+  strokeId: string;
+  userId: number;
+  color: string;
+  width: number;
+  points: number[][];
+};
+
+type DrawingStrokeEvent = {
+  type: "drawing";
+  event: "stroke";
+  sessionId: string;
+  stroke: DrawingStroke;
+};
 
 export default function CanvasPage() {
   const params = useParams();
@@ -10,6 +27,49 @@ export default function CanvasPage() {
   const searchParams = useSearchParams();
   const groupId = params.groupId as string;
   const sessionId = searchParams.get("sessionId");
+
+  const [strokes, setStrokes] = useState<DrawingStroke[]>([]);
+  const socketRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    if (!sessionId) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
+
+    const wsBaseUrl = getApiDomain()
+      .replace(/^http:\/\//, "ws://")
+      .replace(/^https:\/\//, "wss://");
+
+    const socket = new WebSocket(`${wsBaseUrl}/ws?token=${token}`);
+    socketRef.current = socket;
+
+    socket.onmessage = (event) => {
+      try {
+        const data: unknown = JSON.parse(event.data);
+
+        if (
+          typeof data === "object" &&
+          data !== null &&
+          (data as DrawingStrokeEvent).type === "drawing" &&
+          (data as DrawingStrokeEvent).event === "stroke" &&
+          (data as DrawingStrokeEvent).sessionId === sessionId
+        ) {
+          const strokeEvent = data as DrawingStrokeEvent;
+
+          setStrokes((prev) => [...prev, strokeEvent.stroke]);
+        }
+      } catch { }
+    };
+
+    return () => {
+      socket.close();
+      socketRef.current = null;
+    };
+  }, [sessionId]);
 
   return (
     <main className={styles.page}>
@@ -32,13 +92,39 @@ export default function CanvasPage() {
           <div className={`${styles.shellCard} ${styles.softCard}`} style={{ padding: "48px", textAlign: "center" }}>
             <h2 className={styles.sectionTitle}>Drawing Canvas</h2>
             <p className={styles.helperText} style={{ marginTop: 12 }}>
-              Drawing canvas coming soon.
+              Live strokes: {strokes.length}
             </p>
             {sessionId && (
               <p className={styles.helperText} style={{ marginTop: 8, fontSize: 12 }}>
                 Session: {sessionId}
               </p>
             )}
+            <Button
+              onClick={() => {
+                setStrokes((prev) => [
+                  ...prev,
+                  {
+                    strokeId: crypto.randomUUID(),
+                    userId: 2,
+                    color: "#000",
+                    width: 2,
+                    points: [[1, 1], [2, 2], [3, 3]],
+                  },
+                ]);
+              }}
+            >
+              Add Test Stroke
+            </Button>
+
+            <div style={{ marginTop: 24, textAlign: "left" }}>
+              {strokes.map((stroke) => (
+                <div key={stroke.strokeId} style={{ marginBottom: 8 }}>
+                  <span className={styles.helperText}>
+                    User {stroke.userId} drew {stroke.points.length} points
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
