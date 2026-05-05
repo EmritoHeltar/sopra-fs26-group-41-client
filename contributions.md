@@ -115,8 +115,8 @@ reason).
 | ------------------ | -------- | ------------------ | ------------------------------- | ----------------------------------- |
 | **@fly-die** | 29.04.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/1c1a5bb13b86e377499d1f31bac2c833e391652e] | After a poll ends, the group page now displays the poll results #36 | Displays final group decision, making poll outcomes visible and usable |
 | **@fly-die** | 29.04.2026 | [https://github.com/fabianbaechli/sopra-fs26-group-41-client/commit/5b61bb5458232e2b9f110bf0326f5c9ed7b8305c] | When inspecting a user, you see relevant information such as overlap and stats #43 | Improves the group feature and adds a comparison feature within groups (you could e.g. see who your best match is) |
-| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
-| **@username2** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
+| **@fabianbaechli** | 02.05.2026 | [Commit 1](https://github.com/fabianbaechli/sopra-fs26-group-41-server/commit/db3f7a6ac6ea9ef09f4f751447e45a6219de00b8) | Added the ability to start drawings in the backend | Is the foundation for the upcoming user story of collaboratively designing a group profile picture. |
+| **@fabianbaechli** | 02.05.2026 | [Commit 2](https://github.com/fabianbaechli/sopra-fs26-group-41-server/commit/5ef72c9087def35ab81eccc8077973ab227e4bbb) | Added the ability to track drawing strokes in the backend + sending the relevant websocket notifications for users joining the drawing session. | Makes tracking drawing strokes possible, handles presence notifications on join. |
 | **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username3** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
 | **@username4** | [date] | [Link to Commit 2] | [Brief description of the task] | [Why this contribution is relevant] |
