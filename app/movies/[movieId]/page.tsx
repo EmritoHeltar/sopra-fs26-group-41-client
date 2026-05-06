@@ -149,6 +149,9 @@ const MoviePage: React.FC = () => {
   const hasPoster =
     movie?.posterUrl && movie.posterUrl !== "N/A" && movie.posterUrl.trim() !== "";
 
+  const movieYear = Number(movie?.year);
+  const isOutsideRecommendationDataset = Number.isFinite(movieYear) && movieYear > 2023;
+
   const renderOverlap = () => {
     if (overlapState.status === "loading") {
       return (
@@ -161,6 +164,18 @@ const MoviePage: React.FC = () => {
       );
     }
     if (overlapState.status === "ready") {
+      if (overlapState.value === 0 && isOutsideRecommendationDataset) {
+        return (
+          <div className={styles.section}>
+            <div className={styles.tasteMatchBanner}>
+              <span className={styles.tasteMatchText}>
+                Taste match is unavailable because our recommendation dataset currently only covers movies up to October 2023.
+              </span>
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className={styles.section}>
           <div className={styles.tasteMatchBanner}>
