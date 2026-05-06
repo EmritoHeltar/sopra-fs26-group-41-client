@@ -46,11 +46,27 @@ export default function UserProfilePage() {
         const api = new ApiService();
 
         try {
-          const me = await api.get<{ id?: number }>("/users/me");
+          const me = await api.get<UserProfile>("/users/me");
 
           if (me.id === Number(userId)) {
-            redirectedToOwnProfile = true;
-            router.replace("/users/me");
+            if (isMounted) {
+              setProfile({
+                id: me.id,
+                username: me.username,
+                hasLetterboxdData: me.hasLetterboxdData ?? false,
+                tasteOverlap: 100,
+                stats: {
+                  moviesLogged: me.stats?.moviesLogged ?? 0,
+                  highlyRatedMovies: me.stats?.highlyRatedMovies ?? 0,
+                  topGenres: me.stats?.topGenres ?? [],
+                },
+              });
+
+              setTasteOverlap(100);
+              setLoading(false);
+              setTasteOverlapLoading(false);
+            }
+
             return;
           }
         } catch {
@@ -186,11 +202,15 @@ export default function UserProfilePage() {
                     <Title level={2} className={styles.connected} style={{ color: "#3fb00ead" }}>
                       {tasteOverlap}%
                     </Title>
-                    <Text className={styles.helperText} style={{ marginLeft: "10px", marginTop: "15px" }}>with you</Text>
+                    <Text className={styles.helperText} style={{ marginLeft: "10px", marginTop: "15px" }}>
+                      {tasteOverlap === 100 ? "Look at that, you're you!" : "with you"}
+                    </Text>
                   </div>
-                  <Text className={styles.helperText} style={{ marginTop: "8px", display: "block" }}>
-                    Based on shared movies and rating patterns
-                  </Text>
+                  {tasteOverlap !== 100 && (
+                    <Text className={styles.helperText} style={{ marginTop: "8px", display: "block" }}>
+                      Based on shared movies and rating patterns
+                    </Text>
+                  )}
                 </>
               ) : (
                 <Text className={styles.helperText}>Taste overlap unavailable.</Text>
