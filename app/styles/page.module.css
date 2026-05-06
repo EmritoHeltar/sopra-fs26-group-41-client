@@ -348,7 +348,15 @@
   }
 
   .brand {
-    font-size: 32px !important;
+    font-size: 44px !important;
+    line-height: 1.05 !important;
+  }
+
+  .logo {
+    width: 48px !important;
+    height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
   }
 
   .subtitle {
@@ -443,6 +451,19 @@
     background:
       radial-gradient(circle at 92% 82%, rgba(255, 247, 236, 0.28) 0 92px, transparent 93px),
       radial-gradient(circle at 84% 74%, rgba(255, 247, 236, 0.18) 0 92px, transparent 93px);
+  }
+
+  .howItWorksFabWrap {
+    left: 16px;
+    bottom: 16px;
+  }
+
+  .howItWorksFab {
+    height: 42px !important;
+    min-width: 108px !important;
+    padding: 0 10px !important;
+    font-size: 13px !important;
+    gap: 5px !important;
   }
 }
 
@@ -853,16 +874,20 @@
 }
 
 .brandRow {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0px;
+  line-height: 1;
 }
 
 .logo {
-  width: 52px;
-  height: 52px;
+  width: 62px !important;
+  height: 62px !important;
+  max-width: 62px !important;
+  max-height: 62px !important;
   object-fit: contain;
   flex-shrink: 0;
+  display: block;
 }
 
 .movieLayout {
@@ -1688,4 +1713,42 @@
     flex-wrap: wrap;
     justify-content: center;
   }
+}
+
+.howItWorksFabWrap {
+  position: fixed;
+  left: 90px;
+  transform: none;
+  bottom: 24px;
+  transform: translateX(-50%);
+  margin: 0;
+  z-index: 1100;
+}
+
+.howItWorksFab {
+  height: 46px !important;
+  min-width: 118px !important;
+  padding: 0 12px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #b23123 0%, #8f2218 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  flex-shrink: 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.howItWorksFab:hover {
+  background: linear-gradient(90deg, #c43a2b 0%, #a52a1f 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 0 20px rgba(178, 49, 35, 0.35) !important;
+}
+
+.howItWorksFab :global(.anticon) {
+  font-size: 16px;
 }
