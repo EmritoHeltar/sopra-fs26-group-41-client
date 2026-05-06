@@ -116,8 +116,8 @@ export default function HowItWorksPage() {
               Under the hood, the recommendation service uses the MovieLens dataset, which
               contains a very large collection of movie ratings from many different users (32 million ratings). Based
               on this data, we created a weighted graph structure that allows the system to
-              statistically estimate a user's movie preferences and compare them with other users
-              and groups. Due to Movielens' dataset being from 2023, movies which were released after that can't be considered when computing overlaps
+              statistically estimate a user&apos;s movie preferences and compare them with other users
+              and groups. Due to the MovieLens dataset being from 2023, movies released after that time cannot be considered when computing overlaps.
             </Paragraph>
             <Paragraph className={styles.helperText}>
               The system also uses the OMDb API to retrieve movie metadata such as posters,
