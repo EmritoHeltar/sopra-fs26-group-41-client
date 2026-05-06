@@ -100,8 +100,7 @@ const Profile: React.FC = () => {
         hasLetterboxdData: response.hasLetterboxdData,
         stats: {
           moviesLogged: response.stats?.moviesLogged ?? 0,
-          highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0,
-          topGenres: response.stats?.topGenres ?? [],
+          highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0
         },
       };
 
@@ -147,8 +146,7 @@ const Profile: React.FC = () => {
           hasLetterboxdData: response.hasLetterboxdData ?? false,
           stats: {
             moviesLogged: response.stats?.moviesLogged ?? 0,
-            highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0,
-            topGenres: response.stats?.topGenres ?? [],
+            highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0
           },
         };
 
@@ -177,8 +175,7 @@ const Profile: React.FC = () => {
           hasLetterboxdData: false,
           stats: {
             moviesLogged: 0,
-            highlyRatedMovies: 0,
-            topGenres: [],
+            highlyRatedMovies: 0
           },
         });
       } finally {
@@ -316,24 +313,6 @@ const Profile: React.FC = () => {
                 <Text className={styles.helperText} style={{ marginTop: "9px", display: "block" }} >4.5★ and above</Text>
               </Card>
             </div>
-          </div>
-
-          <div className={styles.section}>
-            <Title level={3} className={styles.sectionTitle}>
-              Top Genres
-            </Title>
-
-            {profile.stats.topGenres.length > 0 ? (
-              <div className={styles.genreWrap}>
-                {profile.stats.topGenres.map((genre) => (
-                  <span key={genre} className={styles.genrePill}>
-                    {genre}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <Text className={styles.helperText}>No genres available yet.</Text>
-            )}
           </div>
         </Card>
 

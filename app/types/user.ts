@@ -12,7 +12,6 @@ export interface LoginResponse {
 export interface UserStats {
   moviesLogged: number;
   highlyRatedMovies: number;
-  topGenres: string[];
 }
 
 export interface MyProfile {
