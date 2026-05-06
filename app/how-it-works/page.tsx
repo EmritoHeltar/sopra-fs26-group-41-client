@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Button, Card, Typography } from "antd";
 import {
@@ -21,7 +20,7 @@ export default function HowItWorksPage() {
           <div className={styles.heroLeft}>
             <Link href="/users/me" style={{ textDecoration: "none", color: "inherit" }}>
               <div className={styles.brandRow}>
-                <Image src="/logo.png" alt="logo" className={styles.logo} />
+                <img src="/logo.png" alt="logo" className={styles.logo} />
                 <Title level={1} className={styles.brand}>
                   Movieblendr.
                 </Title>
