@@ -129,37 +129,37 @@ const CreateGroup: React.FC = () => {
 
         <div>
           {createdGroup ? (
-            <Card className={`${styles.shellCard} ${styles.createGroupCard}`}>
-              <div className={styles.createGroupForm} style={{ textAlign: "center" }}>
-                <Title level={4} style={{ color: '#fff4eb' }}>Group Created Successfully!</Title>
-                <Text style={{ color: '#e5b8a7', fontSize: '16px' }}>{createdGroup.name}</Text>
-                <div style={{ margin: '32px 0 24px 0', textAlign: 'left' }}>
-                  <div className={styles.label}>Invite Link</div>
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                    <Input
-                      className={styles.createGroupInput}
-                      value={fullJoinUrl}
-                      readOnly
-                    />
-                    <Button
-                      className={styles.authButton}
-                      style={{ margin: 0, height: '42px', minWidth: '110px' }}
-                      onClick={handleCopyLink}
-                      icon={copied ? <CheckOutlined /> : <CopyOutlined />}
-                    >
-                      {copied ? "Copied!" : "Copy"}
-                    </Button>
-                  </div>
+            <Card
+              className={`${styles.shellCard} ${styles.createGroupCard}`}
+              style={{ maxWidth: "620px", margin: "0 auto" }}
+            >
+              <div className={styles.createGroupForm}>
+                <div style={{ textAlign: "center", marginBottom: "18px" }}>
+                  <Title level={4} style={{ color: "#fff4eb", margin: 0 }}>
+                    Group created
+                  </Title>
                 </div>
 
-                <div className={styles.createGroupSubmitWrap}>
-                  <Button
-                    className={styles.createGroupSubmit}
-                    onClick={() => router.push(`/groups/${createdGroup.id}`)}
-                  >
-                    Go to Group
-                  </Button>
-                </div>
+                <Button
+                  className={styles.authButton}
+                  style={{
+                    width: "220px",
+                    margin: "0 auto 12px auto",
+                    height: "44px",
+                    display: "block",
+                  }}
+                  onClick={handleCopyLink}
+                  icon={copied ? <CheckOutlined /> : <CopyOutlined />}
+                >
+                  {copied ? "Invite link copied" : "Copy invite link"}
+                </Button>
+
+                <Button
+                  className={styles.createGroupSubmit}
+                  onClick={() => router.push(`/groups/${createdGroup.id}`)}
+                >
+                  Go to Group
+                </Button>
               </div>
             </Card>
           ) : (

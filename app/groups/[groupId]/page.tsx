@@ -34,6 +34,7 @@ export default function GroupOverview() {
 
   const [startingPoll, setStartingPoll] = useState(false);
   const [pollError, setPollError] = useState<string | null>(null);
+  const [pollOwnerMessage, setPollOwnerMessage] = useState<string | null>(null);
   const [isStartPollDialogOpen, setIsStartPollDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -93,13 +94,12 @@ export default function GroupOverview() {
               setRecommendationsError("You are not allowed to view this group's recommendations.");
             } else if (apiError.status === 409) {
               setRecommendationsError(
-                apiError.message
-                ?? "Recommendations are not ready yet because not enough group members have uploaded Letterboxd data."
+                "Recommendations are not ready yet. Group members need to upload Letterboxd data first."
               );
             } else if (apiError.status === 404) {
-              setRecommendationsError("No recommendations found for this group.");
+              setRecommendationsError("No recommendations found for this group yet.");
             } else {
-              setRecommendationsError(apiError.message ?? "Failed to load recommendations.");
+              setRecommendationsError("Failed to load recommendations. Please try again later.");
             }
           }
         }
@@ -133,7 +133,7 @@ export default function GroupOverview() {
             } else if (apiError.status === 404) {
               setPollResultsError("No poll results found yet.");
             } else {
-              setPollResultsError(apiError.message ?? "Failed to load poll results.");
+              setPollResultsError("Failed to load poll results. Please try again later.");
             }
           }
         } finally {
@@ -224,15 +224,22 @@ export default function GroupOverview() {
 
       if (status === 403) {
         setPollError("You are not allowed to start a poll for this group.");
+        window.setTimeout(() => setPollError(null), 7000);
         return;
       }
 
       if (status === 409) {
-        setPollError("A poll is already running.");
+        setPollError(
+          recommendationsError
+            ? "A poll cannot be started yet. Group members need to upload Letterboxd data first."
+            : "A poll is already running."
+        );
+        window.setTimeout(() => setPollError(null), 7000);
         return;
       }
 
       setPollError("Failed to start poll.");
+      window.setTimeout(() => setPollError(null), 7000);
     } finally {
       setStartingPoll(false);
     }
@@ -244,11 +251,13 @@ export default function GroupOverview() {
     ? "Need at least 2 members to compare taste profiles."
     : "No group match yet because not enough members have uploaded Letterboxd data.";
 
+
   if (loading) {
     return (
       <main className={styles.page}>
         <div className={styles.content}>
           <div className={styles.loadingWrap}>
+            <Spin size="large" />
             <p className={styles.helperText}>Loading group details...</p>
           </div>
         </div>
@@ -393,35 +402,52 @@ export default function GroupOverview() {
                 justifyContent: "space-between",
                 alignItems: "center",
                 gap: "12px",
+                marginBottom: "18px",
               }}
             >
               <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
                 Group Recommendations
               </h2>
 
-              {group.ownerId === currentUserId ? (
-                <Button
-                  className={styles.authButton}
-                  onClick={() => {
-                    setPollError(null);
-                    setIsStartPollDialogOpen(true);
-                  }}
-                  loading={startingPoll}
-                  icon={<PlayCircleOutlined />}
-                >
-                  Start Poll
-                </Button>
-              ) : (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span className={styles.helperText} style={{ fontSize: "12px" }}>
-                    Only the group owner can start a poll
-                  </span>
-                </div>
-              )}
+              <Button
+                className={styles.authButton}
+                onClick={() => {
+                  setPollError(null);
+
+                  if (group.ownerId !== currentUserId) {
+                    setPollOwnerMessage("Only the group owner can start a poll.");
+                    window.setTimeout(() => setPollOwnerMessage(null), 3500);
+                    return;
+                  }
+
+                  setPollOwnerMessage(null);
+                  setIsStartPollDialogOpen(true);
+                }}
+                loading={startingPoll}
+                icon={<PlayCircleOutlined />}
+                style={
+                  group.ownerId !== currentUserId
+                    ? {
+                      opacity: 0.55,
+                      cursor: "not-allowed",
+                    }
+                    : undefined
+                }
+              >
+                Start Poll
+              </Button>
             </div>
 
-            {pollError && (
-              <p className={styles.warningText}>{pollError}</p>
+            {pollOwnerMessage && (
+              <p className={styles.helperText} style={{ marginTop: "-8px", marginBottom: "12px" }}>
+                {pollOwnerMessage}
+              </p>
+            )}
+
+            {pollError && !isStartPollDialogOpen && (
+              <div className={styles.errorAlert} style={{ marginBottom: "12px" }}>
+                <p className={styles.warningText}>{pollError}</p>
+              </div>
             )}
 
             {recommendationsLoading ? (
@@ -471,7 +497,7 @@ export default function GroupOverview() {
               <h2 className={styles.sectionTitle}>Poll Results</h2>
               <p className={styles.helperText}>
                 {currentUserId === group.ownerId
-                  ? "Poll creation is handled in the poll branch."
+                  ? "The owner can start a poll in the recommendations section above."
                   : "Only the group owner can start a poll."}
               </p>
             </div>
@@ -529,7 +555,12 @@ export default function GroupOverview() {
       {isStartPollDialogOpen && (
         <div
           className={styles.modalOverlay}
-          onClick={() => { if (!startingPoll) setIsStartPollDialogOpen(false); }}
+          onClick={() => {
+            if (!startingPoll) {
+              setIsStartPollDialogOpen(false);
+              setPollError(null);
+            }
+          }}
         >
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h3 className={styles.modalTitle}>Start poll?</h3>
@@ -546,7 +577,10 @@ export default function GroupOverview() {
             <div className={styles.modalActions}>
               <Button
                 className={styles.modalCancelButton}
-                onClick={() => setIsStartPollDialogOpen(false)}
+                onClick={() => {
+                  setIsStartPollDialogOpen(false);
+                  setPollError(null);
+                }}
                 disabled={startingPoll}
               >
                 Cancel

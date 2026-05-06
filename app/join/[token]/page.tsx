@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { Button, Card, Spin, Typography } from "antd";
-import { TeamOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, TeamOutlined } from "@ant-design/icons";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { JoinGroupResponse } from "@/types/group";
@@ -12,6 +13,14 @@ import styles from "@/styles/page.module.css";
 const { Title, Text } = Typography;
 
 type JoinStatus = "loading" | "success" | "alreadyMember" | "invalidToken" | "error";
+
+const getReadableErrorMessage = (error: { status?: number; message?: string }) => {
+  if (error.status === 403) return "You are already a member of this group.";
+  if (error.status === 404) return "This invite link is invalid or has expired.";
+  if (error.status === 401) return "Please log in again to join this group.";
+
+  return "An unexpected error occurred. Please try again.";
+};
 
 const JoinGroup: React.FC = () => {
   const router = useRouter();
@@ -93,12 +102,12 @@ const JoinGroup: React.FC = () => {
           };
 
           setResolvedGroupUrl(alreadyMemberError.groupUrl ?? null);
-          setErrorMessage(alreadyMemberError.message ?? "You are already a member of this group.");
+          setErrorMessage(getReadableErrorMessage(error));
           setStatus("alreadyMember");
         } else if (error.status === 404) {
           setStatus("invalidToken");
         } else {
-          setErrorMessage(error.message ?? "An unexpected error occurred. Please try again.");
+          setErrorMessage(getReadableErrorMessage(error));
           setStatus("error");
         }
       }
@@ -116,6 +125,7 @@ const JoinGroup: React.FC = () => {
       <main className={styles.page}>
         <div className={styles.loadingWrap}>
           <Spin size="large" />
+          <Text className={styles.helperText}>Joining group...</Text>
         </div>
       </main>
     );
@@ -125,6 +135,7 @@ const JoinGroup: React.FC = () => {
     if (status === "success") {
       return (
         <>
+          <TeamOutlined className={styles.joinIcon} style={{ color: "#e5b8a7" }} />
           <Title level={4} className={styles.joinCardTitle}>
             You joined the group!
           </Title>
@@ -209,10 +220,32 @@ const JoinGroup: React.FC = () => {
   return (
     <main className={styles.page}>
       <div className={styles.content}>
-        <Card className={`${styles.shellCard} ${styles.createGroupCard}`}>
-          <div className={styles.joinCardBody}>
-            {renderCardBody()}
+        <div className={styles.hero}>
+          <div className={styles.heroLeft}>
+            <Link href="/users/me" style={{ textDecoration: "none", color: "inherit" }}>
+              <div className={styles.brandRow}>
+                <img src="/logo.png" alt="logo" className={styles.logo} />
+                <Title level={1} className={styles.brand}>
+                  Movieblendr.
+                </Title>
+              </div>
+            </Link>
           </div>
+
+          <div className={styles.heroRight}>
+            <Button className={styles.authButton} onClick={() => navigateToTarget("/users/me")}>
+              <ArrowLeftOutlined />
+              Home
+            </Button>
+          </div>
+        </div>
+
+        <Card className={`${styles.shellCard} ${styles.createGroupCard}`}>
+          <Card className={styles.softCard}>
+            <div className={styles.joinCardBody}>
+              {renderCardBody()}
+            </div>
+          </Card>
         </Card>
       </div>
     </main>

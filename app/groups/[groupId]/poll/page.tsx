@@ -208,7 +208,7 @@ export default function PollPage() {
           try {
             const parsed = JSON.parse(info) as { reason?: string };
             reason = parsed.reason ?? null;
-          } catch {}
+          } catch { }
         }
         setSubmitError(reason ?? "The poll is closed or you have already submitted your answers.");
       } else if (err instanceof Error) {

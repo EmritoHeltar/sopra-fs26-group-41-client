@@ -3,12 +3,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Card, Spin, Typography, Button, Input, Tooltip } from "antd";
-import { TeamOutlined } from "@ant-design/icons";
+import { TeamOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { useApi } from "@/hooks/useApi";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import type { MyProfile, LetterboxdImportResponse } from "@/types/user";
 import styles from "@/styles/page.module.css"
-import Image from "next/image";
 import Link from "next/link";
 
 const { Title, Text } = Typography;
@@ -101,8 +100,7 @@ const Profile: React.FC = () => {
         hasLetterboxdData: response.hasLetterboxdData,
         stats: {
           moviesLogged: response.stats?.moviesLogged ?? 0,
-          highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0,
-          topGenres: response.stats?.topGenres ?? [],
+          highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0
         },
       };
 
@@ -148,8 +146,7 @@ const Profile: React.FC = () => {
           hasLetterboxdData: response.hasLetterboxdData ?? false,
           stats: {
             moviesLogged: response.stats?.moviesLogged ?? 0,
-            highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0,
-            topGenres: response.stats?.topGenres ?? [],
+            highlyRatedMovies: response.stats?.highlyRatedMovies ?? 0
           },
         };
 
@@ -178,8 +175,7 @@ const Profile: React.FC = () => {
           hasLetterboxdData: false,
           stats: {
             moviesLogged: 0,
-            highlyRatedMovies: 0,
-            topGenres: [],
+            highlyRatedMovies: 0
           },
         });
       } finally {
@@ -223,13 +219,7 @@ const Profile: React.FC = () => {
           <div className={styles.heroLeft}>
             <Link href="/users/me" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className={styles.brandRow}>
-                <Image
-                  src="/logo.png"
-                  alt="logo"
-                  width={52}
-                  height={52}
-                  className={styles.logo}
-                />
+                <img src="/logo.png" alt="logo" className={styles.logo} />
                 <Title level={1} className={styles.brand}>
                   Movieblendr.
                 </Title>
@@ -324,26 +314,14 @@ const Profile: React.FC = () => {
               </Card>
             </div>
           </div>
-
-          <div className={styles.section}>
-            <Title level={3} className={styles.sectionTitle}>
-              Top Genres
-            </Title>
-
-            {profile.stats.topGenres.length > 0 ? (
-              <div className={styles.genreWrap}>
-                {profile.stats.topGenres.map((genre) => (
-                  <span key={genre} className={styles.genrePill}>
-                    {genre}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <Text className={styles.helperText}>No genres available yet.</Text>
-            )}
-          </div>
         </Card>
 
+        <div className={styles.howItWorksFabWrap}>
+          <Button className={styles.howItWorksFab} onClick={() => router.push("/how-it-works")}>
+            <InfoCircleOutlined />
+            How it works
+          </Button>
+        </div>
         <div className={styles.fabRow}>
           <Button className={styles.groupsOverviewFab} onClick={() => router.push("/groups")}>
             <TeamOutlined />

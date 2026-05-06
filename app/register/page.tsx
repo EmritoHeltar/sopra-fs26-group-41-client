@@ -8,7 +8,7 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import styles from "../styles/page.module.css";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import Image from "next/image";
+
 
 
 const Register: React.FC = () => {
@@ -56,17 +56,14 @@ const Register: React.FC = () => {
       <div className={styles.headerSection}>
         <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className={styles.brandRow}>
-            <Image
-              src="/logo.png"
-              alt="logo"
-              width={52}
-              height={52}
-              className={styles.logo}
-            />
+            <img src="/logo.png" alt="logo" className={styles.logo} />
             <h1 className={styles.brand}>Movieblendr.</h1>
           </div>
         </Link>
-        <Typography.Text type="secondary">
+        <Typography.Text
+          type="secondary"
+          style={{ display: "block", marginTop: "8px" }}
+        >
           Create your account to start blending
         </Typography.Text>
       </div>
